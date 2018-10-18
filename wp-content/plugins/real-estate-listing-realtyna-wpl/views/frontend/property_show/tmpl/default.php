@@ -26,6 +26,12 @@ if($add_date != '0000-00-00 00:00:00')
     $days = round($interval / 60 / 60 / 24);
 }
 
+if(wpl_global::check_addon('MLS') && $this->show_agent_name || $this->show_office_name )
+{
+    $office_name = isset($this->wpl_properties['current']['raw']['field_2111']) ? '<div class="wpl-prp-office-name"><label>'.$this->label_office_name.'</label><span>'.$this->wpl_properties['current']['raw']['field_2111'].'</span></div>' : '';
+    $agent_name = isset($this->wpl_properties['current']['raw']['field_2112']) ? '<div class="wpl-prp-agent-name"> <label>'.$this->label_agent_name.'</label><span>'.$this->wpl_properties['current']['raw']['field_2112'].'</span></div>' : '';
+}
+
 $pshow_gallery_activities = wpl_activity::get_activities('pshow_gallery', 1);
 $pshow_googlemap_activities = wpl_activity::get_activities('pshow_googlemap', 1, '', 'loadObject');
 $pshow_walkscore_activities = wpl_activity::get_activities('pshow_walkscore', 1);
@@ -167,7 +173,7 @@ $this->_wpl_import($this->tpl_path.'.scripts.js', true, true);
                                     $lk = isset($value['keywords'][$ii]) ? $value['keywords'][$ii] : '';
                                     if(trim($lk) == '') continue;
 
-                                    echo '<div id="wpl-dbst-show'.$value['field_id'].'" class="wpl-column rows location '.$value['keywords'][$ii].'">'.__($lk, 'wpl').' : ';
+                                    echo '<div id="wpl-dbst-show'.$value['field_id'].'-'.$value['keywords'][$ii].'" class="wpl-column rows location '.$value['keywords'][$ii].'">'.__($lk, 'wpl').' : ';
                                     echo '<span>'.$value['locations'][$ii].'</span>';
                                     echo '</div>';
                                 }
@@ -270,6 +276,12 @@ $this->_wpl_import($this->tpl_path.'.scripts.js', true, true);
                                     <li class="wpl-property-visit">
                                         <?php echo __('Visits', 'wpl').' : <span class="value">'.$visits.($days ? ' '.sprintf(__('in %d days', 'wpl'), $days) : '').'</span>'; ?>
                                     </li>
+                                    <?php if(wpl_global::check_addon('MLS') && $this->show_agent_name || $this->show_office_name): ?>
+                                        <div class="wpl-mls-brokerage-info">
+                                            <?php if($this->show_agent_name) echo '<li>'.$agent_name.'</li>'; ?>
+                                            <?php if($this->show_office_name) echo '<li>'.$office_name.'</li>'; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
                             <div class="wpl_prp_right_boxe_details_right">

@@ -70,9 +70,18 @@ $this->_wpl_import($this->tpl_path.'.scripts.pshow', true, true);
             }
 
             /** start loading images **/
-            echo '<li><img src="'.$image_url.'" '.$this->itemprop_image.' class="wpl_gallery_image '.$this->image_class.'" id="wpl_gallery_image'.$image['raw']['id'].'" width="'.$this->image_width.'" height="'.$this->image_height.'" alt="'.$image_alt.'" style="max-height:'.$this->image_height.'px" /></li>';
-            $pager_box .= '<a data-slide-index="'.$i.'" href=""><img src="'.$image_thumbnail_url.'" width="100" height="80" style="width: 100px; height: 80px;" itemprop="image" alt="'.$image_alt.'" /></a>';
-        	$i++;
+            if($this->lazyload == 1)
+            {
+                echo '<li><img data-src="' . $image_url . '" ' . $this->itemprop_image . ' class="lazyimg wpl_gallery_image ' . $this->image_class . '" id="wpl_gallery_image' . $image['raw']['id'] . '" width="' . $this->image_width . '" height="' . $this->image_height . '" alt="' . $image_alt . '" style="max-height:' . $this->image_height . 'px" /></li>';
+                $pager_box .= '<a data-slide-index="' . $i . '" href=""><img class="lazyimg" data-src="' . $image_thumbnail_url . '" width="100" height="80" style="width: 100px; height: 80px;" itemprop="image" alt="' . $image_alt . '" /></a>';
+                $i++;
+            }
+            else
+            {
+                echo '<li><img src="' . $image_url . '" ' . $this->itemprop_image . ' class="wpl_gallery_image ' . $this->image_class . '" id="wpl_gallery_image' . $image['raw']['id'] . '" width="' . $this->image_width . '" height="' . $this->image_height . '" alt="' . $image_alt . '" style="max-height:' . $this->image_height . 'px" /></li>';
+                $pager_box .= '<a data-slide-index="' . $i . '" href=""><img src="' . $image_thumbnail_url . '" width="100" height="80" style="width: 100px; height: 80px;" itemprop="image" alt="' . $image_alt . '" /></a>';
+                $i++;
+            }
         }
 		
         echo '</ul>';

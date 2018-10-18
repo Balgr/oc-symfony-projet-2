@@ -147,11 +147,23 @@ elseif($type == 1)
             $class = "wpl_plist_sort";
             $order = 'ASC';
             $current_order = 'ASC';
+			
+			// only if its featured field
+			if($sort_option['field_name'] == 'p.sp_featured')
+			{
+				$order = 'DESC';
+				$current_order = 'DESC';
+			} 
             
             if($this->orderby == $sort_option['field_name'])
             {
                 $class = "wpl_plist_sort wpl_plist_sort_active";
                 $order = ($this->order == 'ASC' ? 'DESC' : 'ASC');
+				
+				// only if its featured field
+				if($sort_option['field_name'] == 'p.sp_featured'){
+					$order = ($this->order == 'DESC' ? 'ASC' : 'DESC');
+				}
                 
                 $current_order = $this->order;
             }

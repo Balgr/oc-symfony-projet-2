@@ -17,6 +17,7 @@ class wpl_wpl_controller extends wpl_controller
 		elseif($function == 'check_addon_update') $this->check_addon_update();
 		elseif($function == 'update_package') $this->update_package();
 		elseif($function == 'save_realtyna_credentials') $this->save_realtyna_credentials();
+		elseif($function == 'check_envato_purchase_code') $this->check_envato_purchase_code();
 	}
 	
 	private function install_package()
@@ -136,6 +137,33 @@ class wpl_wpl_controller extends wpl_controller
 		wpl_settings::save_setting('realtyna_password', $password, 1);
         
 		$response = wpl_global::check_realtyna_credentials();
+		$this->response($response);
+	}	
+
+	private function check_envato_purchase_code()
+	{
+        // Check Nonce
+        if(!wpl_security::verify_nonce(wpl_request::getVar('_wpnonce', ''), 'wpl_dashboard')) $this->response(array('success'=>0, 'message'=>__('The security nonce is not valid!', 'wpl')));
+        
+		// Import settings library
+		_wpl_import('libraries.settings');
+
+		// Get data
+		$type = wpl_request::getVar('type');
+		$fullname = urlencode(wpl_request::getVar('fullname'));
+		$email = wpl_request::getVar('email');
+		$purchase = wpl_request::getVar('purchase');
+		
+		// Simple check for filling data
+		if($type != 'resend')
+		{
+			if(!$fullname || !$email || !$purchase) 
+			{
+				$this->response(array('success'=>0, 'message'=>__('Enter form items exactly!', 'wpl')));
+			}
+		}
+
+		$response = wpl_global::check_envato_credential($fullname, $email, $purchase);
 		$this->response($response);
 	}
 }

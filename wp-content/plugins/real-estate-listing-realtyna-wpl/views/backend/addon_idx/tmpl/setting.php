@@ -23,9 +23,9 @@ _wpl_import($this->tpl_path.'.scripts.js');
                       <td class="wpl-idx-addon-table-title">
                           <?php echo __('Status','wpl'); ?>
                       </td>
-                      <td class="wpl-idx-addon-table-title">
+                      <!-- <td class="wpl-idx-addon-table-title">
                           <?php echo __('Actions','wpl'); ?>
-                      </td>
+                      </td> -->
                   </tr>
               </thead>
               <tbody>

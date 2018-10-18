@@ -24,15 +24,43 @@ defined('_WPLEXEC') or die('Restricted access');
             <li>
                 <input type="checkbox" name="cache[properties_title]" value="1" id="wpl_cache_properties_title" />
                 <span class="title">
-                    <label for="wpl_cache_properties_title"><?php echo __('Clear listings titles', 'wpl'); ?></label>
+                    <label for="wpl_cache_properties_title"><?php echo __('Clear properties titles', 'wpl'); ?></label>
                 </span>
             </li>
             <li>
                 <input type="checkbox" name="cache[properties_page_title]" value="1" id="wpl_cache_properties_page_title" />
                 <span class="title">
-                    <label for="wpl_cache_properties_page_title"><?php echo __('Clear listings page titles', 'wpl'); ?></label>
+                    <label for="wpl_cache_properties_page_title"><?php echo __('Clear properties page titles', 'wpl'); ?></label>
                 </span>
             </li>
+            <?php if(wpl_global::check_addon('complex')): ?>
+            <li>
+                <input type="checkbox" name="cache[complexes_title]" value="1" id="wpl_cache_complexes_title" />
+                <span class="title">
+                    <label for="wpl_cache_complexes_title"><?php echo __('Clear complexes titles', 'wpl'); ?></label>
+                </span>
+            </li>
+            <li>
+                <input type="checkbox" name="cache[complexes_page_title]" value="1" id="wpl_cache_complexes_page_title" />
+                <span class="title">
+                    <label for="wpl_cache_complexes_page_title"><?php echo __('Clear complexes page titles', 'wpl'); ?></label>
+                </span>
+            </li>
+            <?php endif; ?>
+            <?php if(wpl_global::check_addon('neighborhoods')): ?>
+            <li>
+                <input type="checkbox" name="cache[neighborhoods_title]" value="1" id="wpl_cache_neighborhoods_title" />
+                <span class="title">
+                    <label for="wpl_cache_neighborhoods_title"><?php echo __('Clear neighborhoods titles', 'wpl'); ?></label>
+                </span>
+            </li>
+            <li>
+                <input type="checkbox" name="cache[neighborhoods_page_title]" value="1" id="wpl_cache_neighborhoods_page_title" />
+                <span class="title">
+                    <label for="wpl_cache_neighborhoods_page_title"><?php echo __('Clear neighborhoods page titles', 'wpl'); ?></label>
+                </span>
+            </li>
+            <?php endif; ?>
             <li>
                 <input type="checkbox" name="cache[properties_cached_data]" value="1" checked="checked" id="wpl_cache_properties_cached_data" />
                 <span class="title">

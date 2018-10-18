@@ -25,7 +25,7 @@ if($show == 'multiselect_dropdown' and !$done_this)
         $uniques = array();
         foreach($locations as $location)
         {
-            $location = trim($location);
+            $location = trim(stripslashes($location));
             if(isset($uniques[$location])) continue;
 
             $uniques[$location] = true;

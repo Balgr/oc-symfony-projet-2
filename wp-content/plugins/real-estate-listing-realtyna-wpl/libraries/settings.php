@@ -317,21 +317,57 @@ class wpl_settings
         
         if($cache_type == 'properties_title' or $cache_type == 'all')
 		{
-            $q = " `field_312`=''";
-            if(wpl_global::check_multilingual_status()) $q = wpl_settings::get_multilingual_query(array('field_312'));
+            $q = " `field_313`=''";
+            if(wpl_global::check_multilingual_status()) $q = wpl_settings::get_multilingual_query(array('field_313'));
 
-            $query = "UPDATE `#__wpl_properties` SET ".$q;
+            $query = "UPDATE `#__wpl_properties` SET ".$q." WHERE `kind`='0'";
             wpl_db::q($query, 'UPDATE');
 		}
         
         if($cache_type == 'properties_page_title' or $cache_type == 'all')
 		{
+            $q = " `field_312`=''";
+            if(wpl_global::check_multilingual_status()) $q = wpl_settings::get_multilingual_query(array('field_312'));
+
+            $query = "UPDATE `#__wpl_properties` SET ".$q." WHERE `kind`='0'";
+            wpl_db::q($query, 'UPDATE');
+		}
+
+        if($cache_type == 'complexes_title' or $cache_type == 'all')
+        {
             $q = " `field_313`=''";
             if(wpl_global::check_multilingual_status()) $q = wpl_settings::get_multilingual_query(array('field_313'));
 
-            $query = "UPDATE `#__wpl_properties` SET ".$q;
+            $query = "UPDATE `#__wpl_properties` SET ".$q." WHERE `kind`='1'";
             wpl_db::q($query, 'UPDATE');
-		}
+        }
+
+        if($cache_type == 'complexes_page_title' or $cache_type == 'all')
+        {
+            $q = " `field_312`=''";
+            if(wpl_global::check_multilingual_status()) $q = wpl_settings::get_multilingual_query(array('field_312'));
+
+            $query = "UPDATE `#__wpl_properties` SET ".$q." WHERE `kind`='1'";
+            wpl_db::q($query, 'UPDATE');
+        }
+
+        if($cache_type == 'neighborhoods_title' or $cache_type == 'all')
+        {
+            $q = " `field_313`=''";
+            if(wpl_global::check_multilingual_status()) $q = wpl_settings::get_multilingual_query(array('field_313'));
+
+            $query = "UPDATE `#__wpl_properties` SET ".$q." WHERE `kind`='4'";
+            wpl_db::q($query, 'UPDATE');
+        }
+
+        if($cache_type == 'neighborhoods_page_title' or $cache_type == 'all')
+        {
+            $q = " `field_312`=''";
+            if(wpl_global::check_multilingual_status()) $q = wpl_settings::get_multilingual_query(array('field_312'));
+
+            $query = "UPDATE `#__wpl_properties` SET ".$q." WHERE `kind`='4'";
+            wpl_db::q($query, 'UPDATE');
+        }
         
         if($cache_type == 'listings_meta_keywords' or $cache_type == 'all')
 		{

@@ -22,7 +22,7 @@ if($type == 'locations' and !$done_this)
 
 		$parent = $i != 1 ? $values['location' . ($i - 1) . '_id'] : '';
 		$current_location_id = $values['location' . $i . '_id'];
-		$current_location_name = $values['location' . $i . '_name'];
+		$current_location_name = stripslashes($values['location' . $i . '_name']);
 		$enabled = $i != 1 ? '' : '1';
 
 		$locations = wpl_locations::get_locations($i, $parent, $enabled, '', '`name` ASC', '');

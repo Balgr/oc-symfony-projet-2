@@ -49,17 +49,16 @@ $this->_wpl_import($this->tpl_path . '.scripts.js');
                     <?php if(!wpl_global::check_addon('pro')): ?>
                     <div class="side-4 side-discount" id="wpl_dashboard_discount">
                         <div class="panel-wp">
-                            <h3><?php echo __('Special Discount', 'wpl'); ?></h3>
-
+                            <h3><?php echo sprintf(__('LIMITED TIME OFFER!', 'wpl'), '<strong>65%</strong>'); ?></h3>
                             <div class="panel-body">
                                 <div>
-                                    <?php echo __('Get <span>25%</span> discount on <span>WPL</span> <br/> and <span>all the add-ons!</span>', 'wpl'); ?>
+                                    <?php echo __('Get WPL Pro for $199, and have Real Estate CRM Lite included in the package for free!', 'wpl'); ?>
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <?php echo __('Special Hidden Discount!', 'wpl'); ?>
+                                <?php echo __('Worth $550', 'wpl'); ?>
                             </div>
-                            <a class="wpl_shop_discount" href="https://realtyna.com/coupon/DASHBOARD8ab448b28a03" target="_blank"></a>
+                            <a class="wpl_shop_discount" href="https://codecanyon.net/item/realtyna-wpl-real-estate-listing-plugin/22602973" target="_blank"></a>
                         </div>
                     </div>
                     <?php endif; ?>

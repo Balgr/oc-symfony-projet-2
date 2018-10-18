@@ -11,7 +11,6 @@ defined('_WPLEXEC') or die('Restricted access');
  */
 class wpl_cache
 {
-    const PATH = 'wp-content.cache.WPL';
     protected $path;
     
     /**
@@ -34,7 +33,7 @@ class wpl_cache
      */
     protected function __construct()
     {
-        $this->path = str_replace('.php', '', _wp_import(self::PATH, true, true));
+        $this->path = ABSPATH .'wp-content' .DS. 'cache' .DS. 'WPL' .DS;
         
         /** Check for child websites **/
         $blog_id = wpl_global::get_current_blog_id();

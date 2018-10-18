@@ -41,11 +41,13 @@ $this->_wpl_import('widgets.agents.scripts.js', true, true);
                     echo '<li class="title" '.$this->itemprop_name.'>'.$agent_name.' '.$agent_l_name.'</li>';
                     if(isset($instance['data']['mailto_status']) && $instance['data']['mailto_status'] == 1)
                     {
-                        if(isset($profile['main_email_url'])) echo '<a '.$this->itemprop_email.' href="mailto:'.$profile['data']['main_email'].'"><img src="'.$profile["main_email_url"].'" alt="'.$agent_name.' '.$agent_l_name.'" /></a>';
+                        if(isset($profile['main_email_url']) and wpl_global::get_setting('profile_email_type') == '0') echo '<a '.$this->itemprop_email.' href="mailto:'.$profile['data']['main_email'].'"><img class="'.$lazy_load.'" '.$src.'="'.$profile["main_email_url"].'" alt="'.$agent_name.' '.$agent_l_name.'" /></a>';
+                        if(isset($profile['main_email_url']) and wpl_global::get_setting('profile_email_type') == '1') echo '<a class="email" '.$this->itemprop_email.' href="mailto:'.$profile['data']['main_email'].'">'.$profile['data']['main_email'].'</a>';
                     }
                     else
                     {
-                        if(isset($profile['main_email_url'])) echo '<img '.$this->itemprop_email.' src="' . $profile["main_email_url"] . '" alt="' . $agent_name . ' ' . $agent_l_name . '" />';
+                        if (isset($profile['main_email_url']) and wpl_global::get_setting('profile_email_type') == '0') echo '<img class="'.$lazy_load.'" '.$this->itemprop_email.' '.$src.'="' . $profile["main_email_url"] . '" alt="' . $agent_name . ' ' . $agent_l_name . '" />';
+                        if (isset($profile['main_email_url']) and wpl_global::get_setting('profile_email_type') == '1') echo '<p class="email">'.$profile['data']['main_email'].'</p>';
                     }
                     if(isset($profile['materials']['website']['value'])): ?>
                         <li class="website">

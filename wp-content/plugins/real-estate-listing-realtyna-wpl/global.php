@@ -1222,45 +1222,102 @@ class wpl_global
      * @static
      * @return array
      */
-	public static function check_realtyna_credentials()
+    public static function check_realtyna_credentials()
+    {
+        /** import settings library **/
+        _wpl_import('libraries.settings');
+
+        $current_url = wpl_global::get_full_url();
+        $domain = wpl_global::domain($current_url);
+        $settings = wpl_global::get_settings();
+
+        $phpver = phpversion();
+        $wplversion = wpl_global::wpl_version();
+        $wpversion = wpl_global::wp_version();
+        $username = $settings['realtyna_username'];
+        $password = $settings['realtyna_password'];
+
+        $POST = array(
+            'domain'=>$domain,
+            'wpversion'=>$wpversion,
+            'wplversion'=>$wplversion,
+            'phpver'=>$phpver,
+            'username'=>urlencode($username),
+            'password'=>urlencode($password),
+            'command'=>'check_credentials',
+            'format'=>'json'
+        );
+
+        $io_handler = 'http://billing.realtyna.com/io/io.php';
+        $result = wpl_global::get_web_page($io_handler, $POST);
+
+        $answer = json_decode($result, true);
+
+        /** saving status **/
+        $status = isset($answer['status']) ? $answer['status'] : 0;
+        wpl_settings::save_setting('realtyna_verified', $status, 1);
+
+        $message = $status ? __('Credentials verified.', 'wpl') : __('Invalid credentials!', 'wpl');
+        $success = 1;
+
+        return array('success'=>$success, 'message'=>$message, 'status'=>$status);
+    }    
+
+    /**
+     * Checks Envalizer to preapare verification
+     * @author Damon <damon@realtyna.com>
+     * @param string $name
+     * @param string $email
+     * @param string $purchase_code
+     * @static
+     * @return array
+     */
+	public static function check_envato_credential($name, $email, $purchase_code)
 	{
-		/** import settings library **/
-		_wpl_import('libraries.settings');
+        // get add on names
+        $addon_name = array();
 
-		$current_url = wpl_global::get_full_url();
-		$domain = wpl_global::domain($current_url);
-		$settings = wpl_global::get_settings();
+        $installed_addons = wpl_db::select("SELECT `addon_name` FROM `#__wpl_addons`", 'loadAssocList');
+        foreach($installed_addons as $installed_addon)
+        {
+            $addon_name[] = $installed_addon['addon_name'];
+        }
 
-		$phpver = phpversion();
-		$wplversion = wpl_global::wpl_version();
-		$wpversion = wpl_global::wp_version();
-		$username = $settings['realtyna_username'];
-		$password = $settings['realtyna_password'];
+        $addon_name = implode(',', $addon_name);
 
-		$POST = array(
-			'domain'=>$domain,
-			'wpversion'=>$wpversion,
-			'wplversion'=>$wplversion,
-			'phpver'=>$phpver,
-			'username'=>urlencode($username),
-			'password'=>urlencode($password),
-			'command'=>'check_credentials',
-			'format'=>'json'
-		);
+        // get essential data
+        $current_url     = wpl_global::get_full_url();
+        $url             = wpl_global::domain($current_url);
+        $multisite       = is_multisite() ? 1 : 0;
+        $theme_name      = urlencode(wp_get_theme());
+        $wp_version      = wpl_global::wp_version();
+        $wpl_version     = wpl_global::wpl_version();
+        $phpver          = phpversion();
 
-		$io_handler = 'http://billing.realtyna.com/io/io.php';
-		$result = wpl_global::get_web_page($io_handler, $POST);
+        // Build URL and points
+        $request = 'http://pro.realtyna.com/envalizer/api/verify/'.$addon_name.'/'.$url.'/'.$email.'/'.$purchase_code.'/'.$multisite.'/'.$theme_name.'/'.$wp_version.'/'.$wpl_version.'/'.$phpver.'/'.$name;
 
-		$answer = json_decode($result, true);
+        // Call the URL and get data
+        $result = wp_remote_get($request);
 
-		/** saving status **/
-		$status = isset($answer['status']) ? $answer['status'] : 0;
-		wpl_settings::save_setting('realtyna_verified', $status, 1);
+        if(is_wp_error($result)) 
+        {
+           $error_string = $result->get_error_message();
+           return array('success'=>1, 'message'=>$error_string, 'status' => 0);
+        }
 
-		$message = $status ? __('Credentials verified.', 'wpl') : __('Invalid credentials!', 'wpl');
-		$success = 1;
+        // Convert result to array
+        $answer = json_decode($result['body']);
 
-		return array('success'=>$success, 'message'=>$message, 'status'=>$status);
+        if(isset($answer->message) && $answer->message == 'success') 
+        {
+            wpl_settings::save_setting('realtyna_envato_fullname', $name, 1);
+            wpl_settings::save_setting('realtyna_envato_email', $email, 1);
+            wpl_settings::save_setting('realtyna_envato_purchase', $purchase_code, 1);
+            return array('success'=>1, 'message'=> __( 'New credential sent to your email please check your inbox.', 'wpl' ), 'status' => 1);
+        }
+
+        return array('success'=>1, 'message'=>$answer->message, 'status' => 0);
 	}
 
     /**
@@ -2710,17 +2767,87 @@ class wpl_global
         return $points;
     }
 
-    /**
+     /**
      * @author Howard R. <howard@realtyna.com>
+	 * Detects bot base on http://www.searchenginedictionary.com/spider-names.shtml list 17 Sep 2018
      * @return bool
      */
-    public static function is_bot()
-    {
-        return (boolean) (
-            isset($_SERVER['HTTP_USER_AGENT'])
-            && preg_match('/bot|crawl|slurp|spider|mediapartners/i', $_SERVER['HTTP_USER_AGENT'])
-        );
-    }
+		public static function is_bot()
+		{
+			$bot_names = array(
+				array('AbachoBOT' , 'Abacho' , '-'),
+				array('Acoon' , 'Acoon' , '-'),
+				array('AESOP_com_SpiderMan' , 'Aesop' , '-'),
+				array('ah-ha.com crawler','Ah-ha' , '-'),
+				array('appie' , 'Walhello' , '-'),
+				array('Arachnoidea' , 'Euroseek' , 'active'),
+				array('ArchitextSpider' , 'Excite' , 'inactive'),
+				array('Atomz' , 'Atomz' , '-'),
+				array('DeepIndex' , 'DeepIndex (www.en.deepindex.com)' , '-'),
+				array('ESISmartSpider' , 'Ttravel Finder' , '-'),
+				array('EZResult' , 'EZResults' , '-'),
+				array('FAST-WebCrawler' , 'AlltheWeb' , 'active'),
+				array('Fido' , 'PlanetSearch' , '-'),
+				array('Fluffy the spider' , 'SearchHippo' , 'active'),
+				array('Googlebot' , 'Google' , 'active'),
+				array('Gigabot' , 'Gigablast' , 'active'),
+				array('Gulliver' , 'Northernlight' , 'inactive'),
+				array('Gulper' , 'Yuntis' , 'active'),
+				array('HenryTheMiragoRobot' , 'Mirago' , '-'),
+				array('ia_archiver' , 'Alexa' , 'active'),
+				array('KIT-Fireball/2.0' , 'Fireball (German SE at www.fireball.de)' , '-'),
+				array('LNSpiderguy' , 'Lexis-Nexis' , '-'),
+				array('Lycos_Spider_(T-Rex)' , 'Lycos' , 'inactive'),
+				array('MantraAgent' , 'LookSmart' , 'active'),
+				array('MSN' , 'Microsoft Prototype Crawler Added 5.2003 by Dale Shad of','www.118group.com' , 'active'),
+				array('NationalDirectory-SuperSpider' , 'National Directory' , '-'),
+				array('Nazilla' , 'Websmostlinked' , '-'),
+				array('Openbot' , 'Openfind' , '-'),
+				array('Openfind piranha,Shark' , 'Openfind' , '-'),
+				array('Scooter' , 'AltaVista' , 'active'),
+				array('Scrubby' , 'Scrub The Web' , 'active'),
+				array('Slurp.so/1.0 Slurp/2.0j Slurp/2.0 Slurp/3.0' , 'Inktomi' , 'active'),
+				array('Tarantula' , 'AltaVista' , 'inactive'),
+				array('Teoma_agent1' , 'Teoma' , 'active'),
+				array('UK Searcher Spider' , 'UKSearcher' , '-'),
+				array('WebCrawler' , 'WebCrawler' , '-'),
+				array('Winona','WhatUSeek Added 3.2003 by Dale Shad of www.118group.com' , 'active'),
+				array('ZyBorg' , 'Wisenut' , 'active'),
+				
+				// other bots
+				
+				array('IBM','Almaden','active'), //IBM research project
+				array('Cyveillance','Cyveillance','active'), //A snoop bot checking for copyright/trademark violations
+				array('DTSearch','DTSearch','active'), //Retail search software
+				array('Girafa.com','Girafa','active'), //Client program
+				array('Indy Library','IndyLibrary','active'), //Email harvester
+				array('LinkWalker','LinkWalker','active'), //Link verification
+				array('MarkWatch','MarkWatch','active'), //A snoop bot checking for trademark violations
+				array('NameProtect','NameProtect.com','active'), //A snoop bot checking for trademark violations
+				array('Robozilla','DMOZ','active'),//Link checker used by DMOZ
+				array('Teradex Mapper','Teradex directory','-'),
+				array('Tracerlock','Tracerlock.com','active'), //News monitoring service
+				array('W3C_Validator','W3C','active'), //HTML Validator Added 5.2003 by Mark Parnell of www.clarkecomputers.com.au
+				array('WDG_Validator','WDG','active'), //HTML Validator Added 5.2003 by Mark Parnell of www.clarkecomputers.com.au
+				array('Zealbot','Looksmart','active') //Link checker
+				
+			);
+			
+			$regex_string = '/bot|crawl|slurp|spider|mediapartners|';
+			foreach($bot_names as $bot_name){
+				if($bot_name[2] == 'active'){
+					$regex_string .= $bot_name[1].'|';
+				}
+			}
+			$regex_string = substr($regex_string, 0, -1);
+			$regex_string .= '/i';
+			
+			return (boolean)(
+				isset($_SERVER['HTTP_USER_AGENT'])
+				&& preg_match($regex_string, $_SERVER['HTTP_USER_AGENT'])
+			);
+			
+		}
 
     /**
      * Remove duplicated indexes

@@ -76,7 +76,7 @@ if(isset($wpl_user['materials']['website']['value']))
 						<li class="fax" <?php echo $this->itemprop_faxNumber; ?> ><label><?php echo __('Fax', 'wpl') ?>:</label><?php echo $wpl_user['materials']['fax']['value']; ?></li>
 					<?php endif; ?>
 
-					<?php if(isset($wpl_user['main_email_url'])): ?>
+					<?php if(isset($wpl_user['main_email_url']) and wpl_global::get_setting('profile_email_type') == '0'): ?>
 						<li class="email">
 							<label><?php echo __('Email', 'wpl') ?>:</label>
 							<?php if($mailto): ?>
@@ -86,8 +86,18 @@ if(isset($wpl_user['materials']['website']['value']))
 							<?php endif; ?>
 						</li>
 					<?php endif; ?>
+					<?php if(isset($wpl_user['main_email_url']) and wpl_global::get_setting('profile_email_type') == '1'): ?>
+						<li class="email">
+							<label><?php echo __('Email', 'wpl') ?>:</label>
+							<?php if($mailto): ?>
+								<a <?php echo $this->itemprop_email; ?> href="mailto:<?php echo $wpl_user['materials']['main_email']['value']; ?>"><?php echo $wpl_user['materials']['main_email']['value']; ?></a>
+							<?php else: ?>
+								<p><?php echo $wpl_user['materials']['main_email']['value']; ?></p>
+							<?php endif; ?>
+						</li>
+					<?php endif; ?>
 
-					<?php if(isset($wpl_user['second_email_url'])): ?>
+					<?php if(isset($wpl_user['second_email_url']) and wpl_global::get_setting('profile_email_type') == '0'): ?>
 						<li class="second_email">
 							<label><?php echo __('Second email', 'wpl') ?>:</label>
 							<?php if($mailto): ?>
@@ -97,13 +107,23 @@ if(isset($wpl_user['materials']['website']['value']))
 							<?php endif; ?>
 						</li>
 					<?php endif; ?>
+					<?php if(isset($wpl_user['second_email_url']) and wpl_global::get_setting('profile_email_type') == '1'): ?>
+						<li class="second_email">
+							<label><?php echo __('Second email', 'wpl') ?>:</label>
+							<?php if($mailto): ?>
+								<a <?php echo $this->itemprop_email; ?> href="mailto:<?php echo $wpl_user['materials']['secondary_email']['value']; ?>"><?php echo $wpl_user['materials']['secondary_email']['value']; ?></a>
+							<?php else: ?>
+								<p><?php echo $wpl_user['materials']['secondary_email']['value']; ?></p>
+							<?php endif; ?>
+						</li>
+					<?php endif; ?>
 
 				</ul>
 				<ul class="wpl-agent-info-other-fields">
 					<?php
 						foreach($wpl_user['materials'] as $values)
 						{
-							if($values['field_id'] == 900 || $values['field_id'] == 901 || $values['field_id'] == 902 || $values['field_id'] == 903 || $values['field_id'] == 904 || $values['field_id'] == 914|| $values['field_id'] == 907|| $values['field_id'] == 908|| $values['field_id'] == 909|| $values['field_id'] == 918|| $values['field_id'] == 919|| $values['field_id'] == 920|| $values['field_id'] == 911)
+							if($values['field_id'] == 900 || $values['field_id'] == 901 || $values['field_id'] == 902 || $values['field_id'] == 903 || $values['field_id'] == 904 || $values['field_id'] == 905 || $values['field_id'] == 914|| $values['field_id'] == 907|| $values['field_id'] == 908|| $values['field_id'] == 909|| $values['field_id'] == 918|| $values['field_id'] == 919|| $values['field_id'] == 920|| $values['field_id'] == 911)
 							{
 								continue;
 							}

@@ -357,7 +357,7 @@ class wpl_items
         }
 		else $path = wpl_global::get_upload_base_path($blog_id). $parent_id .DS;
 		
-        // Create thepath if it doesn't exist
+        // Create the path if it doesn't exist
 		if(!wpl_folder::exists($path)) wpl_folder::create($path);
 		
 		return $path;

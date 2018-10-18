@@ -319,7 +319,7 @@ class wpl_db
 		$update_str = '';
 		foreach($params as $field=>$value)
 		{
-			$value=str_replace("'", "\'", $value);
+			$value = wpl_db::escape($value);
 			$update_str .= "`$field`='$value', ";
 		}
 		

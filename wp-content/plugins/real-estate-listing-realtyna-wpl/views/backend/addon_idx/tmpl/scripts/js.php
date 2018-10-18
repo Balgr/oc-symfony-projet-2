@@ -34,8 +34,9 @@ defined('_WPLEXEC') or die('Restricted access');
             wpl_idx_setting_table();
         }
         if(wplj.urlParam('tpl') == 'trial')
-        {
+        {  
             wpl_idx_protect_trial();
+            
         }
         //Back event in idx wizard
         wplj('.wpl-idx-wizard-navigation .back').on('click',function(){
@@ -203,7 +204,7 @@ defined('_WPLEXEC') or die('Restricted access');
             if(wplj(this).is(':checked')){
 
 
-                price = wplj(this).parents('.wpl-idx-addon-table-row').find('.price_total').html();
+                price = wplj(this).parents('.wpl-idx-addon-table-row').find('.price').html();
                 price = price.split('$');
                 total_amount += parseInt(price[0]);
             }
@@ -249,6 +250,7 @@ defined('_WPLEXEC') or die('Restricted access');
     // New user registration -- Sign up step
     function wpl_idx_registration()
     {
+
         wpl_remove_message('.wpl_show_message_idx');
 
         var loader = Realtyna.ajaxLoader.show('.wpl-idx-wizard-main .panel-body', 'normal', 'center', true);
@@ -268,37 +270,26 @@ defined('_WPLEXEC') or die('Restricted access');
                 data: request_str,
                 success: function(data)
                 {
-                    if(data.status == 500)
+
+                    if(data.status != 201)
                     {
-                        if(data.message == 'idx user already exists' || data.error == 'email is already registered')
-                        {
-                            Realtyna.ajaxLoader.hide(loader);
-                            if(data.message)
-                            {
-                                wpl_show_messages(data.message, '.wpl_show_message_idx', 'wpl_red_msg');
-                            }
-                            if(data.error)
-                            {
-                                wpl_show_messages(data.error, '.wpl_show_message_idx', 'wpl_red_msg');
-                            }
-                        }
-                        else
-                        {
-                            for (var error in data.error) {
-                                if (data.error.hasOwnProperty(error)) {
-                                    errors += data.error[error]+'<br/>';
-                                }
-                            }
-                            Realtyna.ajaxLoader.hide(loader);
-                            wpl_show_messages(errors, '.wpl_show_message_idx', 'wpl_red_msg');
-                        }
+                        Realtyna.ajaxLoader.hide(loader);
+                        wplj.each(data.message, function (key, value) {
+                            errors += value;
+                            errors += '<br/>';
+                        });
+                        wpl_show_messages(errors, '.wpl_show_message_idx', 'wpl_red_msg');
+                       
                     }
-                    if(data.status == 200 || data.status == 201)
+                    if(data.status == 201)
                     {
                         wpl_show_messages(data.error, '.wpl_show_message_idx', 'wpl_green_msg');
                         Realtyna.ajaxLoader.hide(loader);
-                        wpl_idx_next_step();
-                        if(wplj.urlParam('tpl') == 'valid') wpl_idx_providers();
+                        
+                        if(wplj.urlParam('tpl') == 'valid'){
+                           wpl_idx_next_step();
+                           wpl_idx_providers();
+                        } 
                         if(wplj.urlParam('tpl') == 'trial') wpl_idx_load_trial_data();
                     }
                 }
@@ -323,18 +314,19 @@ defined('_WPLEXEC') or die('Restricted access');
                 url: '<?php echo wpl_global::get_full_url(); ?>',
                 data: request_str,
                 success: function (data) {
+
                     mlsProviders += '<tr class="wpl-idx-addon-table-row">';
                     mlsProviders += '<td class="wpl-idx-addon-table-title"></td>'
                     mlsProviders += '<td class="wpl-idx-addon-table-title" colspan="3"><?php echo __('MLS Provider','wpl'); ?></td>';
                     mlsProviders += '<td class="wpl-idx-addon-table-title"><?php echo __('Price','wpl'); ?></td>';
                     mlsProviders += '</tr>';
-                    wplj.each(data.response, function (key, value) {
+                    wplj.each(data.message, function (key, value) {
                         mlsProviders += '<tr class="wpl-idx-addon-table-row">';
-                        mlsProviders += '<td class="mls_id" width="40"><input id='+value.mls_id+' class="wpl-idx-table-checkbox" type="radio" /></td>';
-                        mlsProviders += '<td class="logo" width="40"><img height="25" src="'+ value.logo +'" /></td>';
-                        mlsProviders += '<td class="provider">'+ value.provider +'</td>';
+                        mlsProviders += '<td class="mls_id" width="40"><input id='+value.id+' class="wpl-idx-table-checkbox" type="radio" /></td>';
+                        mlsProviders += '<td class="logo" width="40"><img height="25" src="'+ value.image_url +'" /></td>';
+                        mlsProviders += '<td class="provider">'+ value.short_name +'</td>';
                         mlsProviders += '<td class="name">'+ value.name +'</td>';
-                        mlsProviders += '<td class="price"><del>'+ value.price +'$</del><span class="price_total">'+ value.price_total +'$</span></td>';
+                        mlsProviders += '<td class="price">'+ value.price +'$</td>';
                         mlsProviders += '</tr>';
                     });
                     Realtyna.ajaxLoader.hide(loader);
@@ -414,13 +406,14 @@ defined('_WPLEXEC') or die('Restricted access');
                 url: '<?php echo wpl_global::get_full_url(); ?>',
                 data: request_str,
                 success: function (data) {
+                    
                     //wplj.each(data, function (key, value) {
                     mlsProviders += '<tr class="wpl-idx-addon-table-row">';
-                    mlsProviders += '<td class="logo" width="40"><img height="25" src="' + data.price_list.provider_information.logo + '" /></td>';
-                    mlsProviders += '<td class="provider" width="40">' + data.price_list.Provider + '</td>';
-                    mlsProviders += '<td class="price_total">' + data.price_list.pricePerUnit.USD.total + '$ <?php echo __("Per"); ?> ' + data.price_list.unit + '<input type="hidden" value="'+data.price_list.pricePerUnit.USD.total +'"></td>';
+                    mlsProviders += '<td class="logo" width="40"><img height="25" src="' + data.message.logo + '" /></td>';
+                    mlsProviders += '<td class="provider" width="40">' + data.message.short_name + '</td>';
+                    mlsProviders += '<td class="price_total">' + 40 + '$ <?php echo __("Per"); ?> ' + 60 + '<input type="hidden" value="'+50 +'"></td>';
                     mlsProviders += '</tr>';
-                    totalAmount = parseInt(data.price_list.pricePerUnit.USD.total);
+                    totalAmount = parseInt(data.message.price);
 
                     //});
                     Realtyna.ajaxLoader.hide(loader);
@@ -450,13 +443,13 @@ defined('_WPLEXEC') or die('Restricted access');
                 data: request_str,
                 success: function (data) {
                     //wplj.each(data.price_list, function (key, value) {
-                    config_form = wpl_idx_generate_config_form(data.price_list.provider_information);
-
-                    mlsProviders += '<div id="'+data.price_list.MlsId+'" class="wpl-idx-addon-table-row">';
+                    config_form = wpl_idx_generate_config_form(data);
+                     
+                    mlsProviders += '<div id="'+data.message.mls_id+'" class="wpl-idx-addon-table-row">';
                     mlsProviders += '<div class="mls_info">';
-                    mlsProviders += '<span class="logo" width="40"><img height="25" src="' + data.price_list.provider_information.logo + '" /></span>';
-                    mlsProviders += '<span id="provider" class="provider">' + data.price_list.Provider + '</span>';
-                    mlsProviders += '<span class="provider_full_name">' + data.price_list.ProviderFullName + '</span>';
+                    mlsProviders += '<span class="logo" width="40"><img height="25" src="' + data.message.logo + '" /></span>';
+                    mlsProviders += '<span id="provider" class="provider">' + data.message.short_name + '</span>';
+                    mlsProviders += '<span class="provider_full_name">' + data.message.name + '</span>';
                     mlsProviders += '</div>';
                     mlsProviders += '<div id="config_form" class="wpl-idx-config-row">'+config_form+'</div>';
                     mlsProviders += '</div>';
@@ -488,8 +481,12 @@ defined('_WPLEXEC') or die('Restricted access');
                     url: '<?php echo wpl_global::get_full_url(); ?>',
                     data: request_str,
                     success: function (data) {
+                        if (data.status == 200) {
                         Realtyna.ajaxLoader.hide(loader);
-                        window.location.replace("https://payment.realtyna.com/"+data.secret+'/'+mls+'/'+window.location);
+                        encodedurl = btoa(window.location);
+                        window.location.replace("https://payment.realtyna.com/"+data.message.user_id+'/'+data.message.provider_id+'/'+data.message.token+'/'+encodedurl);
+                        }
+                        
                     }
                 });
         });
@@ -520,15 +517,15 @@ defined('_WPLEXEC') or die('Restricted access');
         var property_type;
         if(!wplj("#category").val()) property_type = ""; else property_type = wplj("#category").val();
 
-        var min_bathrooms   = wplj(row).find('#min_bathrooms').val();
-        var max_bathrooms   = wplj(row).find('#max_bathrooms').val();
-        var min_bedrooms    = wplj(row).find('#min_bedrooms').val();
-        var max_bedrooms    = wplj(row).find('#max_bedrooms').val();
-        var min_price       = wplj(row).find('#min_price').val();
-        var max_price       = wplj(row).find('#max_price').val();
-        var square_feet_min = wplj(row).find('#square_feet_min').val();
-        var square_feet_max = wplj(row).find('#square_feet_max').val();
-        var zipcode         = wplj(row).find('#zipcode').val();
+        //var min_bathrooms   = wplj(row).find('#min_bathrooms').val();
+        //var max_bathrooms   = wplj(row).find('#max_bathrooms').val();
+        //var min_bedrooms    = wplj(row).find('#min_bedrooms').val();
+        //var max_bedrooms    = wplj(row).find('#max_bedrooms').val();
+        //var min_price       = wplj(row).find('#min_price').val();
+        //var max_price       = wplj(row).find('#max_price').val();
+        //var square_feet_min = wplj(row).find('#square_feet_min').val();
+        //var square_feet_max = wplj(row).find('#square_feet_max').val();
+        //var zipcode         = wplj(row).find('#zipcode').val();
         var errors = '';
 
         request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=configuration';
@@ -536,10 +533,10 @@ defined('_WPLEXEC') or die('Restricted access');
         '&agent_name='+agent_name+'&office_name='+office_name+
         '&property_type='+property_type+
         '&import_status='+import_status+'&listing_status='+listing_status+'&office_listing='+office_listing+
-        '&agent_listing='+agent_listing+'&all_listing='+all_listing+
-        '&min_bathrooms='+min_bathrooms+'&max_bathrooms='+max_bathrooms+'&min_bedrooms='+min_bedrooms+
-        '&max_bedrooms='+max_bedrooms+'&min_price='+min_price+'&max_price='+max_price+
-        '&square_feet_min='+square_feet_min+'&square_feet_max='+square_feet_max+'&zipcode='+zipcode;
+        '&agent_listing='+agent_listing+'&all_listing='+all_listing;
+        //'&min_bathrooms='+min_bathrooms+'&max_bathrooms='+max_bathrooms+'&min_bedrooms='+min_bedrooms+
+        //'&max_bedrooms='+max_bedrooms+'&min_price='+min_price+'&max_price='+max_price+
+        //'&square_feet_min='+square_feet_min+'&square_feet_max='+square_feet_max+'&zipcode='+zipcode;
 
         /** run ajax query **/
         wplj.ajax(
@@ -548,29 +545,29 @@ defined('_WPLEXEC') or die('Restricted access');
                 url: '<?php echo wpl_global::get_full_url(); ?>',
                 data: request_str,
                 success: function (data) {
-                    if(data.status == 500)
+
+                    if(data.status == 400)
                     {
-                        if(typeof data.error == 'string')
+                        if(typeof data.message == 'string')
                         {
-                            errors = data.error;
+                            errors = data.message;
                         }
                         else
                         {
-                            for (var error in data.error) {
-                                if (data.error.hasOwnProperty(error)) {
-                                    errors += data.error[error]+'<br/>';
-                                }
-                            }
+                            wplj.each(data.message, function (key, value) {
+                                errors += key+': '+value;
+                                errors += '<br/>';
+                            });
                         }
-
                         wpl_show_messages(errors, '.wpl_show_message_idx', 'wpl_red_msg');
                     }
                     if(data.status == 200 || data.status == 201)
                     {
                         wpl_show_messages(data.message, '.wpl_show_message_idx', 'wpl_green_msg');
-                        Realtyna.ajaxLoader.hide(loader);
                         wpl_idx_wizard_thank_you();
                     }
+
+                    Realtyna.ajaxLoader.hide(loader);
                 }
 
             });
@@ -593,8 +590,8 @@ defined('_WPLEXEC') or die('Restricted access');
         config_form += '<?php echo __('Import all active listings', 'wpl')?>';
         config_form +='</div>';
         config_form +='<div class="wpl-idx-form-checkbox">';
-        config_form +='<input id="configure_checkbox" type="checkbox" class="yesno">';
-        config_form += '<?php echo __('Configure', 'wpl')?>';
+         config_form +='<input id="configure_checkbox" type="checkbox" class="yesno">';
+         config_form += '<?php echo __('Configure', 'wpl')?>';
         config_form +='</div>';
         config_form +='</div>';
         config_form +='<div class="wpl-small-12 wpl-medium-6 wpl-large-6 wpl-column">';
@@ -644,73 +641,73 @@ defined('_WPLEXEC') or die('Restricted access');
         config_form += '<?php echo __('I want the sold data as well', 'wpl')?>';
         config_form +='</div>';
         config_form +='</div>';
-        config_form +='<div class="wpl-small-12 wpl-medium-6 wpl-large-9 wpl-column">';
-        config_form +='<div class="wpl-idx-form wpl-row">';
+        //config_form +='<div class="wpl-small-12 wpl-medium-6 wpl-large-9 wpl-column">';
+        // config_form +='<div class="wpl-idx-form wpl-row">';
 
-        config_form +='<div class="wpl-idx-form-element  wpl-small-12 wpl-medium-12 wpl-large-12 wpl-column">';
-        config_form +=' <select  id="category" multiple data-placeholder="<?php echo __('All Categories', 'wpl')?>">';
-        config_form += options;
-        config_form +=' </select>';
-        config_form +='</div>';
+        // config_form +='<div class="wpl-idx-form-element  wpl-small-12 wpl-medium-12 wpl-large-12 wpl-column">';
+        // config_form +=' <select  id="category" multiple data-placeholder="<?php echo __('All Categories', 'wpl')?>">';
+        // config_form += options;
+        // config_form +=' </select>';
+        // config_form +='</div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon bed-icon"></span>';
-        config_form +=' <input id="min_bedrooms" type="number" placeholder="Min Beds">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon bed-icon"></span>';
+        // config_form +=' <input id="min_bedrooms" type="number" placeholder="Min Beds">';
+        // config_form +='</div></div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon bed-icon"></span>';
-        config_form +='<input id="max_bedrooms" type="number" placeholder="Max Beds">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon bed-icon"></span>';
+        // config_form +='<input id="max_bedrooms" type="number" placeholder="Max Beds">';
+        // config_form +='</div></div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon bath-icon"></span>';
-        config_form +='<input id="min_bathrooms" type="number" placeholder="Min Baths">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon bath-icon"></span>';
+        // config_form +='<input id="min_bathrooms" type="number" placeholder="Min Baths">';
+        // config_form +='</div></div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon bath-icon"></span>';
-        config_form +='<input id="max_bathrooms" type="number" placeholder="Max Baths">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon bath-icon"></span>';
+        // config_form +='<input id="max_bathrooms" type="number" placeholder="Max Baths">';
+        // config_form +='</div></div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon price-icon"></span>';
-        config_form +='<input id="min_price"  type="number" placeholder="Min Price">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon price-icon"></span>';
+        // config_form +='<input id="min_price"  type="number" placeholder="Min Price">';
+        // config_form +='</div></div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon price-icon"></span>';
-        config_form +='<input id="max_price" type="number" placeholder="Max Price">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon price-icon"></span>';
+        // config_form +='<input id="max_price" type="number" placeholder="Max Price">';
+        // config_form +='</div></div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon sqft-icon"></span>';
-        config_form +=' <input id="square_feet_min" type="number" placeholder="Min SQFT">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon sqft-icon"></span>';
+        // config_form +=' <input id="square_feet_min" type="number" placeholder="Min SQFT">';
+        // config_form +='</div></div>';
 
-        config_form +=' <div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon sqft-icon"></span>';
-        config_form +='<input id="square_feet_max" type="text" placeholder="Max SQFT">';
-        config_form +='</div></div>';
+        // config_form +=' <div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon sqft-icon"></span>';
+        // config_form +='<input id="square_feet_max" type="text" placeholder="Max SQFT">';
+        // config_form +='</div></div>';
 
-        config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
-        config_form +='<div class="wpl-idx-form-element">';
-        config_form +='<span class="wpl-idx-icon zipcode-icon"></span>';
-        config_form +='<input id="zipcode" type="text" placeholder="Zip Code">';
-        config_form +='</div></div>';
+        // config_form +='<div class="wpl-small-6 wpl-medium-6 wpl-large-6 wpl-column">';
+        // config_form +='<div class="wpl-idx-form-element">';
+        // config_form +='<span class="wpl-idx-icon zipcode-icon"></span>';
+        // config_form +='<input id="zipcode" type="text" placeholder="Zip Code">';
+        // config_form +='</div></div>';
 
-        config_form +='</div>';
-        config_form +='</div>';
-        config_form +='</div>';
-        config_form +='</div>';
+        // config_form +='</div>';
+        // config_form +='</div>';
+        // config_form +='</div>';
+        // config_form +='</div>';
 
         return config_form;
 
@@ -776,7 +773,7 @@ defined('_WPLEXEC') or die('Restricted access');
     }
     /*import sample properties in Trial version*/
     function wpl_idx_load_trial_data() {
-
+        wpl_idx_next_step();  
         wpl_remove_message('.wpl_show_message_idx');
         //var loader = Realtyna.ajaxLoader.show('.wpl-idx-wizard-main .panel-body', 'normal', 'center', true);
         request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=load_trial_data';
@@ -787,17 +784,19 @@ defined('_WPLEXEC') or die('Restricted access');
                 url: '<?php echo wpl_global::get_full_url(); ?>',
                 data: request_str,
                 success: function (data) {
+                   if (data.status == 201) {
                     wpl_idx_wizard_thank_you_trial();
+                   }
+                   
                 }
-
-            });
+             });
     }
     /*Check if the Trial version is used once go to thank you page*/
     function wpl_idx_protect_trial()
     {
         wpl_remove_message('.wpl_show_message_idx');
         var loader = Realtyna.ajaxLoader.show('.wpl-idx-wizard-main .panel-body', 'normal', 'center', true);
-        request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=protect_trial';
+        request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=protect_idx_trial';
 
         wplj.ajax(
             {
@@ -806,9 +805,12 @@ defined('_WPLEXEC') or die('Restricted access');
                 data: request_str,
                 success: function (data) {
                     Realtyna.ajaxLoader.hide(loader);
-                    if(data.status == 500)
+                    
+                    if(data.status == 200)
                     {
                         wpl_idx_wizard_already_used_trial();
+                    }else{
+                        wpl_idx_check_trial_registration();
                     }
                 }
 
@@ -832,16 +834,20 @@ defined('_WPLEXEC') or die('Restricted access');
                 data: request_str,
                 success: function (data) {
 
-                    wplj.each(data.response, function (key, value) {
-                        console.log(value);
-                        mlsProviders += '<tr class="wpl-idx-addon-table-row">';
-                        mlsProviders += '<td class="logo" width="40"><img height="25" src="' + value.image + '"/></td>';
+                    // wplj.each(data.response, function (key, value) {
+                       
+                       if( data.status == 200) {
+                        value = data.message;
+
+                          mlsProviders += '<tr class="wpl-idx-addon-table-row">';
+                        mlsProviders += '<td class="logo" width="40"><img height="25" src="' + value.logo + '"/></td>';
                         mlsProviders += '<td class="provider" width="40">' + value.short_name + '</td>';
                         mlsProviders += '<td class="provider-full-name">' + value.name + '</td>';
-                        mlsProviders += '<td class="status '+ value.status +'">' + value.status + '</td>';
-                        mlsProviders += '<td class="actions"><a href="#" onclick="wpl_idx_delete(0);"><?php echo __('delete','wpl'); ?></a></td>';
+                        mlsProviders += '<td class="status '+ value.configStatus +'">' + value.configStatus + '</td>';
+                        // mlsProviders += '<td class="actions"><a href="#" onclick="wpl_idx_delete(0);"><?php echo __('delete','wpl'); ?></a></td>';
                         mlsProviders += '</tr>';
-                    });
+                       }
+                    // });
                     Realtyna.ajaxLoader.hide(loader);
                     if(mlsProviders.length)
                     {
@@ -884,7 +890,7 @@ defined('_WPLEXEC') or die('Restricted access');
     function wpl_idx_reset_trial() {
         wpl_remove_message('.wpl_show_message_idx');
         var loader = Realtyna.ajaxLoader.show('.wpl-idx-wizard-main .panel-body', 'normal', 'center', true);
-        var request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=reset';
+        var request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=reset_trial';
 
         wplj.ajax(
             {
@@ -893,14 +899,15 @@ defined('_WPLEXEC') or die('Restricted access');
                 data: request_str,
                 success: function (data) {
                     Realtyna.ajaxLoader.hide(loader);
-                    if (data.status == 500) {
-                        var full_version = '<a href="<?php echo wpl_global::add_qs_var('tpl', 'valid'); ?>">Please click here to Continue the full version wizard.</a>';
-                        wpl_show_messages(data.mesage+' '+full_version, '.wpl_show_message_idx', 'wpl_red_msg');
-                    }
-                    if (data.status == 200) {
-                        wpl_show_messages(data.mesage, '.wpl_show_message_idx', 'wpl_green_msg');
-                        window.location.replace("<?php echo wpl_global::add_qs_var('tpl', 'trial'); ?>");
-                    }
+                    console.log(data);
+                    // if (data.status == 500) {
+                    //     var full_version = '<a href="<?php echo wpl_global::add_qs_var('tpl', 'valid'); ?>">Please click here to Continue the full version wizard.</a>';
+                    //     wpl_show_messages(data.mesage+' '+full_version, '.wpl_show_message_idx', 'wpl_red_msg');
+                    // }
+                    // if (data.status == 200) {
+                    //     wpl_show_messages(data.mesage, '.wpl_show_message_idx', 'wpl_green_msg');
+                    //     window.location.replace("<?php echo wpl_global::add_qs_var('tpl', 'trial'); ?>");
+                    // }
                 }
 
             });
@@ -983,4 +990,23 @@ defined('_WPLEXEC') or die('Restricted access');
             });
     }
 
+  function wpl_idx_check_trial_registration()
+  {
+    wpl_remove_message('.wpl_show_message_idx');
+        var loader = Realtyna.ajaxLoader.show('.wpl-idx-wizard-main .panel-body', 'normal', 'center', true);
+        var request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=is_user_registered';
+       wplj.ajax(
+            {
+                type: "POST",
+                url: '<?php echo wpl_global::get_full_url(); ?>',
+                data: request_str,
+                success: function (data) {
+                    Realtyna.ajaxLoader.hide(loader);
+                    if (data.status == 200) {
+                        wpl_idx_load_trial_data();
+                    }
+                    
+                }
+            });
+  }
 </script>

@@ -58,7 +58,7 @@ _wpl_import($this->tpl_path.'.scripts.js');
                                 </div>
                             </div>
                             <div id="wpl-wizard-section2" class="wpl-wizard-section wpl-idx-choose-mls wpl-idx-table clearfix">
-                                <div class="wpl-row wpl-idx-table-tools">
+                                <div class="wpl-row wpl-expanded wpl-idx-table-tools">
                                     <div class="wpl-small-12 wpl-medium-6 wpl-large-4 wpl-column wpl-idx-form">
                                         <div class="wpl-idx-form-element">
                                             <input id="wpl-idx-search-mls-provider" value="" type="text" placeholder="<?php echo __('Search Your MLS','wpl'); ?>">
@@ -105,7 +105,7 @@ _wpl_import($this->tpl_path.'.scripts.js');
                                 <div class="clearfix"></div>
                                 <div class="wpl-idx-wizard-navigation clearfix">
                                     <a class="btn next" onclick="wpl_idx_save();"><?php echo __('Next', 'wpl');?></a>
-                                    <a class="btn back" onclick="wpl_idx_back_step('register_action');"><?php echo __('Back', 'wpl');?></a>
+                                    <a class="btn back" onclick="wpl_idx_back_step('register');"><?php echo __('Back', 'wpl');?></a>
                                 </div>
                             </div>
                             <div id="wpl-wizard-section3" class="wpl-wizard-section wpl-idx-payment">
@@ -127,7 +127,7 @@ _wpl_import($this->tpl_path.'.scripts.js');
                                 <div class="clearfix"></div>
                                 <div class="wpl-idx-wizard-navigation clearfix">
                                     <a class="btn next" onclick="wpl_idx_payment();"><?php echo __('Pay', 'wpl');?></a>
-                                    <a class="btn back" onclick="wpl_idx_back_step('save_action');"><?php echo __('Back', 'wpl');?></a>
+                                    <a class="btn back" onclick="wpl_idx_back_step('provider');"><?php echo __('Back', 'wpl');?></a>
                                 </div>
                             </div>
                             <div id="wpl-wizard-section4" class="wpl-wizard-section wpl-idx-configuration wpl-idx-form">

@@ -141,6 +141,7 @@ function wpl_listhub_tracker()
 {
 	// Provider id of google metrics
 	<?php echo wpl_addon_listhub::lishub_metrics_js(); ?>
+	
 	lh('init', {provider:'<?php echo $this->settings['listhub_tracking_metrics_id']; ?>', test:false});
 	lh('submit', 'DETAIL_PAGE_VIEWED', {lkey:'<?php echo $this->wpl_properties['current']['raw']['listing_key']; ?>'});
 }
@@ -148,20 +149,20 @@ function wpl_listhub_tracker()
 
 function wpl_idx_check_existence()
 {
-	var request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=check_idx';
+	var request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=check_payment';
 
 	wplj.ajax(
+	{
+		type: "POST",
+		url: '<?php echo wpl_global::get_full_url(); ?>',
+		data: request_str,
+		success: function(data)
 		{
-			type: "POST",
-			url: '<?php echo wpl_global::get_full_url(); ?>',
-			data: request_str,
-			success: function (data) {
-				if(data.status == '200' || data.status == '201')
-				{
-					wplj('.wpl-powered-by-realtyna').show();
-				}
+			if(data.status == '200' || data.status == '201')
+			{
+				wplj('.wpl-powered-by-realtyna').show();
 			}
-
-		});
+		}
+	});
 }
 </script>

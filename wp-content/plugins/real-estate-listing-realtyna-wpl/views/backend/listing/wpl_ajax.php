@@ -127,7 +127,7 @@ class wpl_listing_controller extends wpl_controller
 		
 		$location_data = wpl_locations::get_location($value, $location_level);
 		$location_name_column = $location_level != 'zips' ? 'location'.$location_level.'_name' : 'zip_name';
-		
+
 		/** update property location data **/
 		if($location_settings['location_method'] == 2 or ($location_settings['location_method'] == 1 and in_array($location_level, array(1, 2)))) $res = wpl_db::update($table_name, array($table_column=>$value, $location_name_column=>wpl_db::escape($location_data->name)), 'id', $item_id);
 		else $res = wpl_db::update($table_name, array($location_name_column=>$value), 'id', $item_id);

@@ -57,6 +57,13 @@ $categories = wpl_items::get_item_categories('gallery');
     </select>
 </div>
 <div class="fanc-row">
+    <label for="wpl_o_rewrite"><?php echo __('Show Image Description', 'wpl'); ?></label>
+    <select class="text_box" name="option[imgdesc]" type="text" id="wpl_o_imgdesc">
+        <option value="0" <?php if(isset($this->options->imgdesc) and $this->options->imgdesc == '0') echo 'selected="selected"'; ?>><?php echo __('No', 'wpl'); ?></option>
+        <option value="1" <?php if(isset($this->options->imgdesc) and $this->options->imgdesc == '1') echo 'selected="selected"'; ?>><?php echo __('Yes', 'wpl'); ?></option>
+    </select>
+</div>
+<div class="fanc-row">
     <label for="wpl_o_watermark"><?php echo __('Watermark', 'wpl'); ?></label>
     <select class="text_box" name="option[watermark]" type="text" id="wpl_o_watermark" <?php echo !$general_watermark_status ? 'disabled' : '' ?>>
 	    <option value="0" <?php if(isset($this->options->watermark) and $this->options->watermark == '0') echo 'selected="selected"'; ?>><?php echo __('No', 'wpl'); ?></option>

@@ -29,16 +29,16 @@ class wpl_service_sef
 		$settings = wpl_global::get_settings();
 		$wpl_qs = urldecode(wpl_global::get_wp_qvar('wpl_qs'));
 		
-        /** get view **/
+        // get view
 		$this->view = wpl_sef::get_view($wpl_qs, $settings['sef_main_separator']);
         
         // Add classes to body
         if(trim($this->view)) add_filter('body_class', array($this, 'body_class'));
         
-		/** set vars **/
+		// set vars
 		wpl_sef::setVars($this->view, $wpl_qs);
         
-        /** trigger event **/
+        // trigger event
 		wpl_global::event_handler('wplview_detected', array('wplview'=>$this->view));
         
 		if($this->view == 'property_show')
@@ -117,10 +117,10 @@ class wpl_service_sef
             }
         }
         
-        /** Print Geo Meta Tags **/
+        // Print Geo Meta Tags
         $this->geotags();
         
-        /** Print Geo Meta Tags **/
+        // Print Geo Meta Tags
         $this->dublincore();
 	}
 	
@@ -487,11 +487,15 @@ class wpl_service_sef
         $classes[] = 'wpl-page';
         $classes[] = 'wpl_'.$this->view;
 
+        $pid = wpl_request::getVar('pid', 0);
+        $property = wpl_property::get_property_raw_data($pid);
+
         if($this->view == 'property_show')
         {
-            $tpl = wpl_global::get_setting('wpl_propertyshow_layout');
-            if(trim($tpl) == '') $tpl = 'default';
+            if($property['kind'] == 1) $tpl = wpl_global::get_setting('wpl_complex_propertyshow_layout');
+            else $tpl = wpl_global::get_setting('wpl_propertyshow_layout');
             
+            if(trim($tpl) == '') $tpl = 'default';
             $classes[] = 'wpl_'.$this->view.'_'.$tpl;
         }
 

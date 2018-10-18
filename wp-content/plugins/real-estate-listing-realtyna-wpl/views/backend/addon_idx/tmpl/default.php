@@ -38,6 +38,3 @@ _wpl_import($this->tpl_path.'.scripts.js');
         </section>
     </div>
 </div>
-
-
-

@@ -408,9 +408,12 @@ function wpl_do_reset<?php echo $this->widget_id; ?>(exclude, do_search) {
         switch (this.type) {
             case 'text':
 
-                wplj(this).val(null);
-
+                if(!wplj(this).parents().hasClass('chosen-choices'))
+                {
+                    wplj(this).val(null);
+                }
                 break;
+                
             case 'select-multiple':
 
                 wplj(this).find('option:selected').removeAttr('selected');

@@ -17,7 +17,7 @@ defined('_WPLEXEC') or die('Restricted access');
 .side-changes{width: 29% !important; margin-left: 1% !important;}
 */
 
-.wpl_realtyna_credentials_container{padding: 0 0 20px 40px;}
+.wpl_realtyna_credentials_container{padding: 0 0 20px 45px;}
 .wpl_realtyna_credentials_container .wpl_realtyna_credentials_tip{font-style: italic !important; color: #999999;}
 #wpl_realtyna_credentials_check span.action-btn{cursor: default;}
 .wpl_version{padding-left: 10px; color: #ffb42b;}

@@ -37,6 +37,12 @@ foreach($this->wpl_properties as $key=>$property)
     if(!$cut_position) $cut_position = 399;
 
 	$property_id = $property['data']['id'];
+
+    if(wpl_global::check_addon('MLS') && $this->show_agent_name || $this->show_office_name )
+    {
+        $office_name = isset($property['raw']['field_2111']) ? '<div class="wpl-prp-office-name"><label>'.$this->label_office_name.'</label> <span>'.$property['raw']['field_2111'].'</span></div>' : '';
+        $agent_name = isset($property['raw']['field_2112']) ? '<div class="wpl-prp-agent-name"> <label>'.$this->label_agent_name.'</label><span>'.$property['raw']['field_2112'].'</span></div>' : '';
+    }
 	?>
 	<div class="wpl-column">
 		<div class="wpl_prp_cont wpl_prp_cont_old
@@ -59,7 +65,12 @@ foreach($this->wpl_properties as $key=>$property)
 
                 <?php $location_visibility = wpl_property::location_visibility($property['data']['id'], $property['data']['kind'], $current_user_membership_id); ?>
 				<h4 class="wpl_prp_listing_location"><span <?php echo $this->itemprop_address.''.$this->itemscope.' '.$this->itemtype_PostalAddress;?> ><span <?php echo $this->itemprop_addressLocality; ?>><?php echo ($location_visibility === true ? $property['location_text'] : $location_visibility);?></span></span></h4>
-
+                <?php if(wpl_global::check_addon('MLS') && $this->show_agent_name || $this->show_office_name): ?>
+                    <div class="wpl-mls-brokerage-info">
+                        <?php if($this->show_agent_name) echo $agent_name; ?>
+                        <?php if($this->show_office_name) echo $office_name; ?>
+                    </div>
+                <?php endif; ?>
 				<div class="wpl_prp_listing_icon_box"><?php echo $room . $bathroom . $parking . $pic_count . $build_up_area; ?>
                     <?php if(wpl_global::get_setting('show_plisting_visits')): ?>
 					<div class="visits_box">

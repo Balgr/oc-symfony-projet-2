@@ -126,6 +126,9 @@ class wpl_service_wpl
         {
             $style = 'styles/pro/main.css';
             $js = 'styles/pro/main.min.js';
+
+            // Fix for imagesLoaded conflict in themex
+            wp_enqueue_script('imageloaded', 'https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js', array('x-site-body','jquery'), null, true);
         }
         elseif($current_theme == 'genesis')
         {

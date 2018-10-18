@@ -101,10 +101,13 @@ function wpl_profile_finalize(item_id)
 		wplj("#wpl_profile_finalize_button").removeAttr("disabled");
 		wplj(ajax_loader_element).html('');
 		
-		if (data.success == 1)
+		if(data.success === 1)
 		{
+		    <?php /* Force Profile Completion */ if(isset($this->user_data['maccess_fpc']) and $this->user_data['maccess_fpc']): ?>
+            window.location.replace("<?php echo wpl_addon_membership::URL('dashboard'); ?>");
+            <?php endif; ?>
 		}
-		else if (data.success != 1)
+		else if(data.success !== 1)
 		{
 		}
 	});

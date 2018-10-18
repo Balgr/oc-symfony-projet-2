@@ -21,10 +21,10 @@ elseif(in_array($type, array('date', 'datetime')) and !$done_this)
 	/** MIN/MAX extoptions **/
 	$extoptions = explode(',', $field['extoption']);
 
-	if(trim($extoptions[0]) != '' and ($extoptions[0] == 'now' or $extoptions[0] == 'minimum_date')) $min_value = date("Y-m-d");
+	if(isset($extoptions[0]) and trim($extoptions[0]) != '' and ($extoptions[0] == 'now' or $extoptions[0] == 'minimum_date')) $min_value = date("Y-m-d");
 	else $min_value = (isset($extoptions[0]) and trim($extoptions[0]) != '') ? $extoptions[0] : '1990-01-01';
 
-	if(trim($extoptions[1]) != '' and $extoptions[1] == 'now') $max_value = date("Y-m-d");
+	if(isset($extoptions[1]) and trim($extoptions[1]) != '' and $extoptions[1] == 'now') $max_value = date("Y-m-d");
 	else $max_value = (isset($extoptions[1]) and trim($extoptions[1]) != '') ? $extoptions[1] : '2030-01-01';
 
 	$show_icon = (isset($extoptions[2]) and trim($extoptions[2]) != '') ? $extoptions[2] : 0;
@@ -294,7 +294,7 @@ elseif($type == 'listings' and !$done_this)
 		$current_values = explode(',', wpl_request::getVar('sf_multiple_'.$field_data['table_column']));
 	
         $html .= '<div class="wpl_searchwid_'.$field_data['table_column'].'_multiselect_container">
-		<select data-placeholder="'.__($field['name'], 'wpl').'" class="wpl_searchmod_'.$field_data['table_column'].'_multiselect" id="sf'.$widget_id.'_multiple_'.$field_data['table_column'].'" name="sf'.$widget_id.'_multiple_'.$field_data['table_column'].'" multiple="multiple">';
+		<select data-placeholder="'.__($field['name'], 'wpl').'"  data-placeholder="'.__($field['name'], 'wpl').'" class="wpl_searchmod_'.$field_data['table_column'].'_multiselect" id="sf'.$widget_id.'_multiple_'.$field_data['table_column'].'" name="sf'.$widget_id.'_multiple_'.$field_data['table_column'].'" multiple="multiple">';
 		
         foreach($listings as $listing)
 		{

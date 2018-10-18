@@ -6,6 +6,7 @@ class wpl_wpl_controller extends wpl_controller
 {
 	public $tpl_path = 'views.backend.wpl.tmpl';
 	public $tpl;
+	public $user;
 	
 	public function admin_home()
 	{
@@ -17,7 +18,10 @@ class wpl_wpl_controller extends wpl_controller
 		
         // Create Nonce
         $this->nonce = wpl_security::create_nonce('wpl_dashboard');
-        
+
+        // get current user
+        $this->user = wp_get_current_user();
+
 		/** import tpl **/
 		parent::render($this->tpl_path, $this->tpl);
 	}

@@ -12,13 +12,26 @@ defined('_WPLEXEC') or die('Restricted access');
             <?php else: ?>
             <div class="wpl-addons-install-wp wpl_install_addons_container">
                 <div class="wpl_realtyna_credentials_container">
-                	<input type="text" name="realtyna_username" id="realtyna_username" value="<?php if(isset($this->settings['realtyna_username'])) echo $this->settings['realtyna_username']; ?>" placeholder="<?php echo __('Billing username', 'wpl'); ?>" autocomplete="off" />
+                    <input type="text" name="realtyna_username" id="realtyna_username" value="<?php if(isset($this->settings['realtyna_username'])) echo $this->settings['realtyna_username']; ?>" placeholder="<?php echo __('Billing username', 'wpl'); ?>" autocomplete="off" />
                     <input type="password" name="realtyna_password" id="realtyna_password" value="<?php if(isset($this->settings['realtyna_password'])) echo $this->settings['realtyna_password']; ?>" placeholder="<?php echo __('Billing password', 'wpl'); ?>" autocomplete="off" />
                     <input class="wpl-button button-1" type="button" onclick="save_realtyna_credentials();" value="<?php echo __('Save', 'wpl'); ?>" />
                     &nbsp;<span id="wpl_realtyna_credentials_check"><span class="action-btn <?php echo ((isset($this->settings['realtyna_verified']) and $this->settings['realtyna_verified']) ? 'icon-enabled' : 'icon-disabled'); ?>"></span></span>
-                    <br />
+                    <br/>
                     <span class="wpl_realtyna_credentials_tip"><?php echo __('Billing information is necessary for Premium Support and Add-on updates!', 'wpl'); ?></span>
                 </div>
+
+                <?php if($this->settings['realtyna_verified'] == 0): ?>             
+                    <?php if(!isset($this->settings['realtyna_envato_purchase'])): ?>
+                        <div class="wpl_realtyna_envato_container_drop" onclick="dropdown_envato_purchase_form();"><?php echo __('Did you bought WPL from <i>CodeCanyon</i>? Click Here to get your username and password.', 'wpl'); ?></div>
+                        <div class="wpl_realtyna_envato_container">
+                            <input type="text" name="realtyna_envato_fullname" id="realtyna_envato_fullname" value="<?php echo trim($this->user->user_firstname .' '. $this->user->user_lastname); ?>" placeholder="<?php echo __('Full Name', 'wpl'); ?>" autocomplete="off" />
+                            <input type="text" name="realtyna_envato_email" id="realtyna_envato_email" value="<?php echo $this->user->user_email; ?>" placeholder="<?php echo __('Email', 'wpl'); ?>" autocomplete="off" />
+                            <input type="text" name="realtyna_envato_purchase" id="realtyna_envato_purchase" value="" placeholder="<?php echo __('Purchase Code', 'wpl'); ?>" autocomplete="off" />
+                            <input class="wpl-button button-1" type="button" onclick="check_envato_purchase_code('submit');" value="<?php echo __('Save', 'wpl'); ?>" />
+                            <span id="wpl_realtyna_envato_check"><span class="action-btn <?php echo ((isset($this->settings['realtyna_verified']) and $this->settings['realtyna_verified']) ? 'icon-enabled' : 'icon-disabled'); ?>"></span></span>
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>             
                 <label for="wpl_addon_file"><?php echo __('Install Add On', 'wpl'); ?> : </label>
                 <?php
 					$params = array('html_element_id' => 'wpl_addon_file', 'html_path_message' => '.wpl_addons_message .wpl_show_message', 'html_ajax_loader' => '#wpl_install_addon_ajax_loader', 'request_str' => 'admin.php?wpl_format=b:wpl:ajax&wpl_function=install_package&_wpnonce='.$this->nonce, 'valid_extensions' => array('zip'));

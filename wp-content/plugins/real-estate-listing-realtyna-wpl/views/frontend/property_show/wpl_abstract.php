@@ -45,6 +45,9 @@ abstract class wpl_property_show_controller_abstract extends wpl_controller
     public $itemtype_PostalAddress;
     public $itemtype_offer;
     public $itemtype_QuantitativeValue;
+
+    public $show_agent_name;
+    public $show_office_name;
 	
 	public function display($instance = array())
 	{
@@ -71,25 +74,28 @@ abstract class wpl_property_show_controller_abstract extends wpl_controller
 
 			return parent::render($this->tpl_path, 'message', false, true);
 		}
-        
-        $tpl = wpl_global::get_setting('wpl_propertyshow_layout');
-        if(trim($tpl) == '') $tpl = 'default';
-        
-        $this->tpl = wpl_request::getVar('tpl', $tpl);
-        
-		/** property listing model **/
-		$this->model = new wpl_property;
-		$this->pid = wpl_request::getVar('pid', 0);
-		
-		$listing_id = wpl_request::getVar('mls_id', 0);
-		if(trim($listing_id))
+
+        // property listing model
+        $this->model = new wpl_property();
+        $this->pid = wpl_request::getVar('pid', 0);
+
+        $listing_id = wpl_request::getVar('mls_id', 0);
+        if(trim($listing_id))
         {
             $this->pid = wpl_property::pid($listing_id);
             wpl_request::setVar('pid', $this->pid);
         }
-		
-		$property = $this->model->get_property_raw_data($this->pid);
-		
+
+        $property = $this->model->get_property_raw_data($this->pid);
+
+        // Property show layout
+        if($property['kind'] == 1) $tpl = wpl_global::get_setting('wpl_complex_propertyshow_layout');
+        else $tpl = wpl_global::get_setting('wpl_propertyshow_layout');
+
+        if(trim($tpl) == '') $tpl = 'default';
+        
+        $this->tpl = wpl_request::getVar('tpl', $tpl);
+
 		/** no property found **/
 		if(!$property or $property['finalized'] == 0 or $property['confirmed'] == 0 or $property['deleted'] == 1 or $property['expired'] >= 1)
 		{
@@ -140,6 +146,13 @@ abstract class wpl_property_show_controller_abstract extends wpl_controller
 		$this->itemtype_PostalAddress = ($this->microdata) ? 'itemtype="http://schema.org/PostalAddress"' : '';
 		$this->itemtype_offer = ($this->microdata) ? 'itemtype="http://schema.org/offer"' : '';
 		$this->itemtype_QuantitativeValue = ($this->microdata) ? 'itemtype="http://schema.org/QuantitativeValue"' : '';
+
+        /*Agent and office name for mls compliance*/
+        $this->show_agent_name = isset($this->settings['show_agent_name']) ? $this->settings['show_agent_name'] : 0;
+        $this->show_office_name = isset($this->settings['show_listing_brokerage']) ? $this->settings['show_listing_brokerage'] : 0;
+
+        $this->label_agent_name = isset($this->settings['label_agent_name']) ? $this->settings['label_agent_name'] : 0;
+        $this->label_office_name = isset($this->settings['label_listing_brokerage']) ? $this->settings['label_listing_brokerage'] : 0;
 
 		/** define current index **/
 		$wpl_properties['current']['data'] = (array) $property;

@@ -512,7 +512,7 @@ function wpl_favorite_control(id, mode)
 
 function wpl_idx_check_existence()
 {
-    var request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=check_idx';
+    var request_str = 'wpl_format=b:addon_idx:ajax&wpl_function=check_payment';
 
     wplj.ajax(
     {
@@ -531,7 +531,8 @@ function wpl_idx_check_existence()
 
 /** ListHub Compliance */
 <?php 
-if(wpl_global::check_addon('listhub') and $this->settings['listhub_tracking_status'] == '1'){
+if(wpl_global::check_addon('listhub') and $this->settings['listhub_tracking_status'] == '1')
+{
     //listhub metrics js
     echo wpl_addon_listhub::lishub_metrics_js();
     
@@ -543,8 +544,9 @@ if(wpl_global::check_addon('listhub') and $this->settings['listhub_tracking_stat
         $listing_id = $this->wpl_properties['current']['raw']['listing_key'];
         $listing_ids .= "{lkey:'{$listing_id}'},";
     }
+
     $listing_ids = rtrim($listing_ids, ', ');
     if($listing_ids) echo "lh('submit', 'SEARCH_DISPLAY', [{$listing_ids}])";
-} 
+}
 ?>
 </script>

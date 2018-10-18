@@ -202,7 +202,7 @@ defined('_WPLEXEC') or die('Restricted access');
                     pids = wplj(this).attr('id');
             }
         });
-        
+
         var pids_array = pids.split(',');
 
         wplj(".wpl-mass-publish-facebook i").removeClass(prev_class).addClass(ajax_loader_image_class);

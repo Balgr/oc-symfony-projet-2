@@ -119,7 +119,7 @@ $is_multi_agent = (count($users_data) > 1 ? true : false);
 				<li <?php echo $this->itemprop_faxNumber; ?> class="fax"><?php echo $user_data['wpl_user']['materials']['fax']['value']; ?></li>
 				<?php endif; ?>
 
-				<?php if(isset($user_data['wpl_user']['main_email_url'])): ?>
+				<?php if(isset($user_data['wpl_user']['main_email_url']) and wpl_global::get_setting('profile_email_type') == '0'): ?>
 				<li class="email">
 					<?php if($mailto): ?>
 					<a <?php echo $this->itemprop_email; ?> href="mailto:<?php echo $user_data['wpl_user']['materials']['main_email']['value']; ?>"><img src="<?php echo $user_data['wpl_user']['main_email_url']; ?>" alt="<?php echo $user_data['agent_name']. ' '.$user_data['agent_l_name']; ?>" /></a>
@@ -128,8 +128,17 @@ $is_multi_agent = (count($users_data) > 1 ? true : false);
 					<?php endif; ?>
 				</li>
 				<?php endif; ?>
+				<?php if(isset($user_data['wpl_user']['main_email_url']) and wpl_global::get_setting('profile_email_type') == '1'): ?>
+					<li class="email">
+						<?php if($mailto): ?>
+							<a <?php echo $this->itemprop_email; ?> href="mailto:<?php echo $user_data['wpl_user']['materials']['main_email']['value']; ?>"><?php echo $user_data['wpl_user']['materials']['main_email']['value']; ?></a>
+						<?php else: ?>
+							<p><?php echo $user_data['wpl_user']['materials']['main_email']['value']; ?></p>
+						<?php endif; ?>
+					</li>
+				<?php endif; ?>
 
-				<?php if(isset($user_data['wpl_user']['second_email_url'])): ?>
+				<?php if(isset($user_data['wpl_user']['second_email_url']) and wpl_global::get_setting('profile_email_type') == '0'): ?>
 				<li class="second_email">
 					<?php if($mailto): ?>
 					<a <?php echo $this->itemprop_email; ?> href="mailto:<?php echo $user_data['wpl_user']['materials']['secondary_email']['value']; ?>"><img src="<?php echo $user_data['wpl_user']['second_email_url']; ?>" alt="<?php echo $user_data['agent_name']. ' '.$user_data['agent_l_name']; ?>" /></a>
@@ -137,6 +146,15 @@ $is_multi_agent = (count($users_data) > 1 ? true : false);
 					<img src="<?php echo $user_data['wpl_user']['second_email_url']; ?>" alt="<?php echo $user_data['agent_name']. ' '.$user_data['agent_l_name']; ?>" />
 					<?php endif; ?>
 				</li>
+				<?php endif; ?>
+				<?php if(isset($user_data['wpl_user']['second_email_url']) and wpl_global::get_setting('profile_email_type') == '1'): ?>
+					<li class="second_email">
+						<?php if($mailto): ?>
+							<a <?php echo $this->itemprop_email; ?> href="mailto:<?php echo $user_data['wpl_user']['materials']['secondary_email']['value']; ?>"><?php echo $user_data['wpl_user']['materials']['secondary_email']['value']; ?></a>
+						<?php else: ?>
+							<p><?php echo $user_data['wpl_user']['materials']['secondary_email']['value']; ?></p>
+						<?php endif; ?>
+					</li>
 				<?php endif; ?>
 			</ul>
 		</div>

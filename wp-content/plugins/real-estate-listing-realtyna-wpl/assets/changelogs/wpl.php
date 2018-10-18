@@ -4,6 +4,15 @@ defined('_WPLEXEC') or die('Restricted access');
 ?>
 <div>
 	<div class="wpl_rev_container">
+        <h4>WPL4.3.0 (<span class="wpl_log_date">10/12/2018</span> <span class="wpl_log_revision">revision 4322</span>)</h4>
+        -- Added ability to show agent email in plain text instead of image.<br>
+        -- Improvements on WPL divi modules.<br>
+        -- Applied some optimizations.<br>
+        -- Fixed some issues on PDF flyer.<br>
+        -- Fixed an issue in sort options.<br>
+        -- Fixed an apostrophe character issue on location names.<br>
+        -- Fixed some UI issues.
+
         <h4>WPL4.2.1 (<span class="wpl_log_date">7/30/2018</span> <span class="wpl_log_revision">revision 4229</span>)</h4>
         -- Removed overview control from map activities due to removing it from Google Maps API.<br>
         -- Fixed some issues.

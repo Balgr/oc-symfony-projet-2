@@ -348,7 +348,7 @@ class wpl_property
 		
 		/** get files **/
 		$path = WPL_ABSPATH .DS. 'libraries' .DS. 'query_select';
-		$files = array();
+        $files = wpl_folder::files($path, '.php$');
 		$query = '';
 		
 		$defaults = array('id', 'kind', 'pic_numb', 'att_numb', 'confirmed', 'finalized', 'deleted', 'user_id', 'add_date', 'visit_time', 'visit_date', 'sent_numb', 'contact_numb', 'zip_name', 'zip_id', 'location_text');
@@ -356,8 +356,6 @@ class wpl_property
 		{
 			$query .= $table_name.".`".$default."`, ";
 		}
-		
-		if(wpl_folder::exists($path)) $files = wpl_folder::files($path, '.php$');
 		
 		foreach($fields as $key=>$field)
 		{
@@ -1982,7 +1980,7 @@ class wpl_property
         
         $ext_array = array('jpg', 'jpeg', 'gif', 'png');
         
-        $path = wpl_items::get_path($property_id, $kind);
+        $path = wpl_items::get_path($property_id, $kind, wpl_property::get_blog_id($property_id));
         $thumbnails = wpl_folder::files($path, '^th.*\.('.implode('|', $ext_array).')$', 3, true);
 
         foreach($thumbnails as $thumbnail) wpl_file::delete($thumbnail);
@@ -2271,7 +2269,7 @@ class wpl_property
         $kind = wpl_property::get_property_kind($property_id);
         $ext_array = array('jpg', 'jpeg', 'gif', 'png');
 
-        $path = wpl_items::get_path($property_id, $kind);
+        $path = wpl_items::get_path($property_id, $kind, wpl_property::get_blog_id($property_id));
         $thumbnails = wpl_folder::files($path, '^th.*\.('.implode('|', $ext_array).')$', 3, true);
 
         foreach($thumbnails as $thumbnail) wpl_file::delete($thumbnail);
@@ -2326,8 +2324,8 @@ class wpl_property
         }
         
         // Clone listing folder
-        $listing_path = wpl_items::get_path($property_id, $kind);
-        $clone_path = wpl_items::get_path($clone_id, $kind);
+        $listing_path = wpl_items::get_path($property_id, $kind, wpl_property::get_blog_id($property_id));
+        $clone_path = wpl_items::get_path($clone_id, $kind, wpl_property::get_blog_id($clone_id));
         
         wpl_folder::copy($listing_path, $clone_path, '', true);
         
@@ -2515,5 +2513,34 @@ class wpl_property
     public static function is_finalized($property_id)
     {
         return wpl_property::get_property_field('finalized', $property_id);
+    }
+
+    /**
+     * Returns number of Days On Market
+     * @author Howard R <howard@realtyna.com>
+     * @param integer $property_id
+     * @param string $column
+     * @return integer
+     */
+    public static function DOM($property_id, $column = 'add_date')
+    {
+        $date_added = wpl_property::get_property_field($column, $property_id);
+        $now = time();
+
+        $diff = $now - strtotime($date_added);
+        return ceil($diff / 86400);
+    }
+
+    /**
+     * Returns Days On Market of a property
+     * @author Howard R <howard@realtyna.com>
+     * @param integer $property_id
+     * @param string $column
+     * @return string
+     */
+    public static function DOMString($property_id, $column = 'add_date')
+    {
+        $DOM = wpl_property::DOM($property_id, $column);
+        return sprintf(__('%s Days', 'wpl'), $DOM);
     }
 }

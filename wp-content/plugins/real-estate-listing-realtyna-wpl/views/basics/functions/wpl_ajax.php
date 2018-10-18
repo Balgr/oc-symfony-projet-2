@@ -36,9 +36,13 @@ class wpl_functions_controller extends wpl_controller
 	private function infowindow()
 	{
         $wpl_property = new wpl_property();
-		$listing_fields = $wpl_property->get_plisting_fields();
-		$select = $wpl_property->generate_select($listing_fields, 'p');
-		$property_ids = wpl_request::getVar('property_ids', '');
+
+        $property_ids = wpl_request::getVar('property_ids', '');
+        $ex_pids = explode(',', $property_ids);
+        $kind = wpl_property::get_property_kind($ex_pids[0]);
+
+        $plisting_fields = $wpl_property->get_plisting_fields('', $kind);
+        $select = $wpl_property->generate_select($plisting_fields, 'p');
 
 		$query = "SELECT ".$select." FROM `#__wpl_properties` AS p WHERE 1 AND p.`deleted`='0' AND p.`finalized`='1' AND p.`confirmed`='1' AND p.`expired`='0' AND p.`id` IN (".$property_ids.")";
 		$properties = $wpl_property->search($query);
@@ -47,9 +51,6 @@ class wpl_functions_controller extends wpl_controller
         $force = false;
         $cookies = wpl_request::get('COOKIE');
         if(isset($cookies['wpl_unit1']) or isset($cookies['wpl_unit2']) or isset($cookies['wpl_unit3']) or isset($cookies['wpl_unit4'])) $force = true;
-        
-		/** plisting fields **/
-		$plisting_fields = $wpl_property->get_plisting_fields();
 		
 		$wpl_properties = array();
 		foreach($properties as $property)

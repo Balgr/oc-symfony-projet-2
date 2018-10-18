@@ -21,6 +21,7 @@ $video_width = isset($params['video_width']) ? $params['video_width'] : 640;
 $video_height = isset($params['video_height']) ? $params['video_height'] : 270;
 
 if(!count($videos) or !is_array($videos)) return;
+print_r($videos);
 ?>
 <div itemprop="video" itemscope itemtype="http://schema.org/VideoObject" class="wpl_videos_container" id="wpl_videos_container<?php echo $property_id; ?>">
 	<ul class="wpl_videos_list_container">

@@ -16,6 +16,7 @@ $this->autoplay = (isset($params['autoplay']) and trim($params['autoplay']) != '
 $this->lazyload = (isset($params['lazyload']) and trim($params['lazyload']) != '') ? $params['lazyload'] : 0;
 $this->resize = (isset($params['resize']) and trim($params['resize']) != '') ? $params['resize'] : 1;
 $this->rewrite = (isset($params['rewrite']) and trim($params['rewrite']) != '') ? $params['rewrite'] : 0;
+$this->imgdesc = (isset($params['imgdesc']) and trim($params['imgdesc']) != '') ? $params['imgdesc'] : 0;
 $this->watermark = (isset($params['watermark']) and trim($params['watermark']) != '') ? $params['watermark'] : 1;
 $this->thumbnail = (isset($params['thumbnail']) and trim($params['thumbnail']) != '') ? $params['thumbnail'] : 1;
 $this->thumbnail_width = isset($params['thumbnail_width']) ? $params['thumbnail_width'] : 100;
@@ -41,7 +42,6 @@ foreach($css as $style) wpl_extensions::import_style($style);
 
 /** import js/css codes **/
 $this->_wpl_import($this->tpl_path.'.scripts.pshow_modern', true, false);
-
 ?>
 <div class="wpl-gallery-pshow-wp" id="wpl_gallery_wrapper-<?php echo $this->activity_id; ?>">
 
@@ -59,6 +59,8 @@ $this->_wpl_import($this->tpl_path.'.scripts.pshow_modern', true, false);
                 $image_url = $image['url'];
                 $image_thumbnail_url = $image['url'];
                 $original_image_url = $image['url'];
+                $image_title = $image['title'];
+                $image_description = $image['description'];
 
                 if(isset($image['raw']['item_extra2'])) $image_alt = $image['raw']['item_extra2'];
                 else $image_alt = $wpl_properties['current']['raw']['meta_keywords'];
@@ -83,10 +85,16 @@ $this->_wpl_import($this->tpl_path.'.scripts.pshow_modern', true, false);
                     if($this->watermark) $original_image_url = wpl_images::watermark_original_image($params);
                 }
                 ?>
-                <li id="wpl-gallery-img-<?php echo $image['raw']['id']; ?>" data-thumb="<?php echo $image_thumbnail_url; ?>" data-src="<?php echo $original_image_url; ?>" data-hover-title="<?php echo __('Click to see gallery', 'wpl'); ?>" style="position: absolute;opacity: 0;">
+                <li <?php if($this->imgdesc): ?> data-sub-html="<div><h3><?php echo $image_title; ?></h3><p><?php echo $image_description; ?></p></div>" <?php endif; ?> id="wpl-gallery-img-<?php echo $image['raw']['id']; ?>" data-thumb="<?php echo $image_thumbnail_url; ?>" data-src="<?php echo $original_image_url; ?>" data-hover-title="<?php echo __('Click to see gallery', 'wpl'); ?>" style="position: absolute; opacity: 0;">
                     <span>
                         <img <?php echo $this->itemprop_image; ?> src="<?php echo $image_url; ?>" alt="<?php echo $image_alt; ?>" >
                     </span>
+                    <?php if($this->imgdesc): ?>
+                    <div class="wpl-gallery-pshow-img-desc">
+                        <h3><?php echo $image_title; ?></h3>
+                        <p><?php echo $image_description; ?></p>
+                    </div>
+                    <?php endif; ?>
                 </li>
                 <?php
             }

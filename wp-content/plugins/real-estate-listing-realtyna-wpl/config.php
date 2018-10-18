@@ -19,7 +19,7 @@ function _wpl_import($include, $override = true, $return_path = false)
 	{
 		$overrided_exploded = explode('.', 'overrides.'.$include);
 		$overrided_path = WPL_ABSPATH . implode(DS, $overrided_exploded) . '.php';
-		if(file_exists($overrided_path)) $path = $overrided_path;
+		if(is_file($overrided_path)) $path = $overrided_path;
 		
 		/** theme overrides just for tmpl files **/
 		if(strpos($include, '.tmpl.') !== false)
@@ -33,7 +33,7 @@ function _wpl_import($include, $override = true, $return_path = false)
 			$theme_exploded = explode('.', $overrided_file_in_theme);
 			$theme_path = $wp_theme_path .DS. implode(DS, $theme_exploded) . '.php';
 			
-			if(file_exists($theme_path)) $path = $theme_path;
+			if(is_file($theme_path)) $path = $theme_path;
             
 			/** child theme **/
 			if(is_child_theme())
@@ -41,7 +41,7 @@ function _wpl_import($include, $override = true, $return_path = false)
                 $wp_stylesheet_path = get_stylesheet_directory();
 				$child_theme_path = $wp_stylesheet_path .DS. implode(DS, $theme_exploded) . '.php';
 				
-				if(file_exists($child_theme_path)) $path = $child_theme_path;
+				if(is_file($child_theme_path)) $path = $child_theme_path;
 			}
 		}
 	}
@@ -51,7 +51,7 @@ function _wpl_import($include, $override = true, $return_path = false)
 		return $path;
 	}
 	
-	if(file_exists($path))
+	if(is_file($path))
     {
         require_once $path;
         return true;
@@ -63,29 +63,20 @@ function _wpl_import($include, $override = true, $return_path = false)
  * Imports wordpress files
  * @author Howard <howard@realtyna.com>
  * @param string $include
- * @param boolean $override
  * @param boolean $return_path
  * @return string
  */
-function _wp_import($include, $override = true, $return_path = false)
+function _wp_import($include, $return_path = false)
 {
 	$original_exploded = explode('.', $include);
 	$path = ABSPATH . implode(DS, $original_exploded) . '.php';
-	
-	if($override)
-	{
-		$overrided_exploded = explode('.', 'overrides.'.$include);
-		$overrided_path = ABSPATH . implode(DS, $overrided_exploded) . '.php';
-
-		if(file_exists($overrided_path)) $path = $overrided_path;
-	}
 	
 	if($return_path)
 	{
 		return $path;
 	}
 	
-	if(file_exists($path))
+	if(is_file($path))
 	{
         require_once $path;
         return true;

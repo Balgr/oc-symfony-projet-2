@@ -247,12 +247,14 @@ elseif($type == 'locations' and !$done_this) //////////////////////////// Locati
 		if(!isset($values[$location_name])) continue;
 		if(!trim($values[$location_name])) continue;
 
+		$location_value = trim(stripslashes($values[$location_name]));
+
 		// Location Abbr
-		$abbr = wpl_locations::get_location_abbr_by_name($values[$location_name], $i);
+		$abbr = wpl_locations::get_location_abbr_by_name($location_value, $i);
 
 		$return['location_ids'][$i] = $location_id;
-		$return['locations'][$i] = trim($abbr) ? __($abbr, 'wpl') : __($values[$location_name], 'wpl');
-        $return['raw'][$i] = $values[$location_name];
+		$return['locations'][$i] = trim($abbr) ? __($abbr, 'wpl') : __($location_value, 'wpl');
+        $return['raw'][$i] = $location_value;
 		$return['keywords'][$i] = __($location_settings['location'.$i.'_keyword'], 'wpl');
 	}
 	

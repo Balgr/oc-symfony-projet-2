@@ -39,7 +39,7 @@ function wpl_initialize<?php echo $this->activity_id; ?>()
 		mapTypeControlOptions: {
               mapTypeIds: ['roadmap', 'satellite'],
               style: google.maps.MapTypeControlStyle.DEFAULT,
-              position: google.maps.ControlPosition.BOTTOM_CENTER
+              position: google.maps.ControlPosition.RIGHT_BOTTOM
         },
 		fullscreenControl: false,
 		streetViewControl: false,
@@ -48,7 +48,7 @@ function wpl_initialize<?php echo $this->activity_id; ?>()
 			position: google.maps.ControlPosition.LEFT_BOTTOM
 		}
 	};
-    
+
 	/** init map **/
 	wpl_map<?php echo $this->activity_id; ?> = new google.maps.Map(document.getElementById('wpl_map_canvas<?php echo $this->activity_id; ?>'), mapOptions);
 	infowindow<?php echo $this->activity_id; ?> = new google.maps.InfoWindow();

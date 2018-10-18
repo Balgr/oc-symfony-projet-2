@@ -66,6 +66,11 @@ abstract class wpl_property_listing_controller_abstract extends wpl_controller
     public $itemtype_offer;
     public $itemtype_QuantitativeValue;
 
+    public $show_agent_name;
+    public $show_office_name;
+    public $label_agent_name;
+    public $label_office_name;
+
 	public function display($instance = array())
     {
         // Check Access
@@ -145,6 +150,13 @@ abstract class wpl_property_listing_controller_abstract extends wpl_controller
 		$this->itemtype_offer = ($this->microdata) ? 'itemtype="http://schema.org/offer"' : '';
 		$this->itemtype_QuantitativeValue = ($this->microdata) ? 'itemtype="http://schema.org/QuantitativeValue"' : '';
 
+        /*Agent and office name for mls compliance*/
+        $this->show_agent_name = isset($this->settings['show_agent_name']) ? $this->settings['show_agent_name'] : 0;
+        $this->show_office_name = isset($this->settings['show_listing_brokerage']) ? $this->settings['show_listing_brokerage'] : 0;
+
+        $this->label_agent_name = isset($this->settings['label_agent_name']) ? $this->settings['label_agent_name'] : "";
+        $this->label_office_name = isset($this->settings['label_listing_brokerage']) ? $this->settings['label_listing_brokerage'] : "";
+
 		/*Favorite btn show or hide*/
         $this->favorite_btn = isset($this->settings['wpl_ui_customizer_property_listing_favorite_btn']) ? $this->settings['wpl_ui_customizer_property_listing_favorite_btn'] : 1;
 
@@ -212,7 +224,7 @@ abstract class wpl_property_listing_controller_abstract extends wpl_controller
         if(!$this->return_listings)
         {
             // Save Search in SESSION
-            wpl_session::set('wpl_listing_criteria', $where);
+            wpl_session::set('wpl_listing_criteria', $this->model->where);
             wpl_session::set('wpl_listing_orderby', $this->orderby);
             wpl_session::set('wpl_listing_order', $this->order);
             wpl_session::set('wpl_listing_total', $this->model->total);

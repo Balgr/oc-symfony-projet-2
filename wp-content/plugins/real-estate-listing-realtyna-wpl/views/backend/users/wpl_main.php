@@ -22,6 +22,10 @@ class wpl_users_controller extends wpl_controller
         
 		$possible_orders = array('u.id', 'u.user_registered', 'wpl.expiry_date');
 		
+		/* apply filters */
+		_wpl_import('libraries.filters');
+		@extract(wpl_filters::apply('wpl_b_users_possible_orders', array('possible_orders'=>$possible_orders)));
+		
 		$orderby = in_array(wpl_request::getVar('orderby'), $possible_orders) ? wpl_request::getVar('orderby') : $possible_orders[0];
 		$order = in_array(strtoupper(wpl_request::getVar('order')), array('ASC','DESC')) ? wpl_request::getVar('order') : 'ASC';
 		

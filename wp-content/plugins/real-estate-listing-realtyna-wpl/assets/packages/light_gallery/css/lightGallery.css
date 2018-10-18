@@ -68,6 +68,9 @@
 #lg-outer .lg-slide{
 	position: relative;
 }
+#lg-outer .lg-slide > div{
+	padding:20px;
+}
 /*lightGallery starting effects*/
 #lg-gallery.opacity {
 	opacity: 1;

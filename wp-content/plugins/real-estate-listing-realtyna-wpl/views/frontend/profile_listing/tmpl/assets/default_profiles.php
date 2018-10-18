@@ -42,7 +42,8 @@ foreach($this->wpl_profiles as $key=>$profile)
                           <a '.$this->itemprop_url.' href="'.$profile['profile_link'].'>" class="view_properties">'. __('View properties', 'wpl').'</a>
                         </div>';
 
-                  if(isset($profile['main_email_url'])) echo '<a href="mailto:'.$profile['data']['main_email'].'"><img src="'.$profile["main_email_url"].'" alt="'.$agent_name.' '.$agent_l_name.'" /></a>';
+                  if(isset($profile['main_email_url']) and wpl_global::get_setting('profile_email_type') == '0') echo '<a href="mailto:'.$profile['data']['main_email'].'"><img src="'.$profile["main_email_url"].'" alt="'.$agent_name.' '.$agent_l_name.'" /></a>';
+                  if(isset($profile['main_email_url']) and wpl_global::get_setting('profile_email_type') == '1') echo '<a class="email" href="mailto:'.$profile['data']['main_email'].'">'.$profile['data']['main_email'].'</a>';
                   $cut_position = strrpos(substr($description, 0, 400), '.', -1);
                   if(!$cut_position) $cut_position = 399;
                   echo '<div class="about" '.$this->itemprop_description.'>'.substr($description, 0, $cut_position + 1).'</div>';

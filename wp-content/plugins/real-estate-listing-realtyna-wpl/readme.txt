@@ -3,14 +3,15 @@ Contributors: realtyna
 Donate link: https://realtyna.com/
 Tags: RETS, IDX, MLS, Real Estate, Realty
 Requires at least: 4.0.0
-Tested up to: 4.9.7
-Stable tag: 4.2.1
+Tested up to: 4.9.8
+Stable tag: 4.3.0
+Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Manage property listings, RETS / IDX / VOW real estate options and scalable features. Support for all RETS based MLS providers in North America.
 
-== Description ==
+== WPL Real Estate ==
 
 Run your real estate website using WPL. WPL has lot's of features and addons for real estate agents and real estate agencies. Check [Realtyna WPL official website](https://realtyna.com/) and WPL demo website: [http://wpl28.realtyna.com](http://wpl28.realtyna.com)
 
@@ -18,13 +19,17 @@ Download [WPL manual](http://wpl.realtyna.com/wassets/wpl-manual.pdf) and check 
 
 [WPL](http://wpl.realtyna.com/) (WordPress Property Listing) is an amazing flexible plugin for real estate and vertical markets. The system is designed in such a way that database management is fully flexible. This means you can add/remove/change the fields without custom changing the database. Sequentially, the property search function in WPL is flexible as well allowing the admin to set the desired search parameters from the administration panel.
 
+**LIMITED TIME OFFER!**
+
+Get WPL Pro for $199 on [CodeCanyon](https://codecanyon.net/item/realtyna-wpl-real-estate-listing-plugin/22602973), and have Real Estate CRM Lite included in the package for free! (Worth $550)
+
 **WPL Expansion options**
 
 *   Have necessary database fields for further MLS Integration ([MLS Coverage](https://realtyna.com/mls-coverage/)) (integrating MLS / IDX / RETS / VOW / XML / DDF servers into WPL - Wordpress directly) - Extra customization may be needed. [http://WordPress-IDX.COM](http://WordPress-IDX.COM) also: [http://MLS-Integration.com](http://MLS-Integration.com)
 *   Native Custom Brand Mobile App [https://realtyna.com/real-estate-ios-android-app/](https://realtyna.com/real-estate-ios-android-app/)
-*   Demographic Package [https://realtyna.com/wpl/wpl-add-ons/demographic-info-for-wpl/](https://realtyna.com/wpl/wpl-add-ons/demographic-info-for-wpl/)
+*   Demographic Package [https://realtyna.com/demographic-info-for-wpl/](https://realtyna.com/demographic-info-for-wpl/)
 *   Listhub Integration add-on
-*   Cloud Hosting (Starting from $24.95 per month) [http://hosting.realtyna.com](http://hosting.realtyna.com)
+*   Cloud Hosting (Starting from $49.95 per month) [http://hosting.realtyna.com](http://hosting.realtyna.com)
 *   Option for Multisite Franchise Solution [https://realtyna.com/enterprise-solutions/franchise-multisite-solution/](https://realtyna.com/enterprise-solutions/franchise-multisite-solution/)
 
 **Native Themes for WPL**

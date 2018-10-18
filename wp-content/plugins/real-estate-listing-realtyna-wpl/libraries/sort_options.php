@@ -75,17 +75,14 @@ class wpl_sort_options
      */
 	public static function sort_options($sort_ids)
 	{
-		$query = "SELECT `id`,`index` FROM `#__wpl_sort_options` WHERE `id` IN ($sort_ids) ORDER BY `index` ASC";
-		$options = wpl_db::select($query, 'loadAssocList');
-		
-		$conter = 0;
-		$ex_sort_ids = explode(',', $sort_ids);
-		
-		foreach($ex_sort_ids as $ex_sort_id)
-		{
-			self::update('wpl_sort_options', $ex_sort_id, 'index', $options[$conter]["index"]);
-			$conter++;
-		}
+        $conter = 1;
+        $ex_sort_ids = explode(',', $sort_ids);
+
+        foreach($ex_sort_ids as $ex_sort_id)
+        {
+            self::update('wpl_sort_options', $ex_sort_id, 'index', $conter);
+            $conter++;
+        }
 	}
 	
     /**
