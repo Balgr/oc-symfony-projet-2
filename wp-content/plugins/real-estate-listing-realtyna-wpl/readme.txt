@@ -4,7 +4,7 @@ Donate link: https://realtyna.com/
 Tags: RETS, IDX, MLS, Real Estate, Realty
 Requires at least: 4.0.0
 Tested up to: 4.9.8
-Stable tag: 4.3.0
+Stable tag: 4.3.1
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -81,6 +81,18 @@ Submit a support ticket on Realtyna ticketing system: [https://support.realtyna.
 6. External Responsive Template: Agent listing
 
 == Changelog ==
+
+= 4.3.1 =
+* Fixed some issues.
+
+= 4.3.0 =
+* Added ability to show agent email in plain text instead of image.
+* Improvements on WPL divi modules.
+* Applied some optimizations.
+* Fixed some issues on PDF flyer.
+* Fixed an issue in sort options.
+* Fixed an apostrophe character issue on location names.
+* Fixed some UI issues.
 
 = 4.2.1 =
 * Removed overview control from map activities due to removing it from Google Maps API.

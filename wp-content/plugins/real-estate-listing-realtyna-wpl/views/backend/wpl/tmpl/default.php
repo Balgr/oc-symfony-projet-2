@@ -14,12 +14,12 @@ $this->_wpl_import($this->tpl_path . '.scripts.js');
             <span class="wpl-dashboard-ver">v<?php echo wpl_global::wpl_version(); ?></span>
         </h2>
     </header>
-    
+
     <div class="wpl-flashes-container"><?php echo wpl_flash::get(); ?></div>
-    
+
     <!-- Generating announcements -->
     <?php $this->announcements(); ?>
-    
+
     <div id="dashboard-links-wp">
         <ul>
             <?php foreach($this->submenus as $submenu): if(!wpl_users::has_menu_access($submenu->menu_slug, wpl_users::get_cur_user_id())) continue; ?>
@@ -34,37 +34,19 @@ $this->_wpl_import($this->tpl_path . '.scripts.js');
             <?php endforeach; ?>
         </ul>
     </div>
-    
+
     <?php if(wpl_users::is_super_admin()): ?>
     <div class="sidebar-wp sidebar-float">
         <div class="side-ni-addons">
             <div class="sidebar-wp sidebar-float">
-                
+
                 <div class="rt-same-height sidebar-float">
 
                     <!-- Generating optional addons -->
                     <?php $this->not_installed_addons(); ?>
 
-                    <!-- Special Discount -->
-                    <?php if(!wpl_global::check_addon('pro')): ?>
-                    <div class="side-4 side-discount" id="wpl_dashboard_discount">
-                        <div class="panel-wp">
-                            <h3><?php echo sprintf(__('LIMITED TIME OFFER!', 'wpl'), '<strong>65%</strong>'); ?></h3>
-                            <div class="panel-body">
-                                <div>
-                                    <?php echo __('Get WPL Pro for $199, and have Real Estate CRM Lite included in the package for free!', 'wpl'); ?>
-                                </div>
-                            </div>
-                            <div class="panel-footer">
-                                <?php echo __('Worth $550', 'wpl'); ?>
-                            </div>
-                            <a class="wpl_shop_discount" href="https://codecanyon.net/item/realtyna-wpl-real-estate-listing-plugin/22602973" target="_blank"></a>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
                     <!-- WPL change-log -->
-                    <div class="side-<?php echo wpl_global::check_addon('pro') ? '7' : '3'; ?> side-changes js-full-height" data-minuse-size="56" id="wpl_dashboard_changelog">
+                    <div class="side-7 side-changes js-full-height" data-minuse-size="56" id="wpl_dashboard_changelog">
                         <div class="panel-wp">
                             <h3><?php echo __('Changelog', 'wpl'); ?></h3>
 
@@ -90,7 +72,7 @@ $this->_wpl_import($this->tpl_path . '.scripts.js');
                     <!-- Generating share box -->
                     <?php $this->sharebox(); ?>
                 </div>
-                
+
                 <div class="rt-same-height sidebar-float">
                     <!-- Generating statistic section -->
                     <?php $this->statistic(); ?>

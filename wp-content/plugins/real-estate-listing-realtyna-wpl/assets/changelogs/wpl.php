@@ -4,6 +4,9 @@ defined('_WPLEXEC') or die('Restricted access');
 ?>
 <div>
 	<div class="wpl_rev_container">
+        <h4>WPL4.3.1 (<span class="wpl_log_date">10/19/2018</span> <span class="wpl_log_revision">revision 4333</span>)</h4>
+        -- Fixed some issues.
+
         <h4>WPL4.3.0 (<span class="wpl_log_date">10/12/2018</span> <span class="wpl_log_revision">revision 4322</span>)</h4>
         -- Added ability to show agent email in plain text instead of image.<br>
         -- Improvements on WPL divi modules.<br>

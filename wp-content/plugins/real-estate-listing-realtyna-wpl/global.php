@@ -2209,8 +2209,12 @@ class wpl_global
      */
     public static function get_realtyna_announcements()
 	{
+	    $basic = (int) !wpl_global::check_addon('pro');
+
 		$POST = array(
 			'command'=>'get_announcements',
+			'basic'=>$basic,
+            'version'=>wpl_global::wpl_version(),
 			'format'=>'json'
 		);
 
